@@ -51,3 +51,36 @@ def nearest_bank(world, position):
         return nearest_felucca_bank(world, position)
 
 
+CENTER2 = (2260,480)
+FORGES2 = (
+    (2248,417),
+    (2240,443),
+    (2211,477),
+    (2212,489),
+)
+
+MINOC_FORGES = (
+    (2561,501),
+    (2586,517),
+    #(2599,475),
+    (2468,555),
+    (2469,555),
+    (2468,557),
+    (2469,557),
+)
+
+def nearest_forge(world, position):
+    if is_rel_por(world):
+        if position.y > 1470:
+            # south of the mountain
+            return (1317,1568)
+        elif position.x >= 1250 and position.x <= 1360 and position.y >= 1280 and position.y <= 1330:
+            # in cave
+            return (1289,1311)
+        elif position.x < 1270:
+            return (1230,1327)
+        else:
+            # northern city end
+            return (1317,1342)
+    else:
+        return None
