@@ -16,6 +16,7 @@
 from twisted.python import log
 import uo.packets as p
 from gemuo.engine import Engine
+from gemuo.cliloc import lookup_cliloc
 
 class PrintMessages(Engine):
     def __init__(self, client):
@@ -31,7 +32,7 @@ class PrintMessages(Engine):
            (packet.text[0] != '[' or packet.text[-1] != ']'):
             log.msg("<%s> %s" % (packet.name, packet.text))
         elif isinstance(packet, p.LocalizedMessage) and packet.type != 0x06:
-            log.msg("<%s> %#x" % (packet.name, packet.text))
+            log.msg("<%s> %s" % (packet.name, lookup_cliloc(packet.text)))
 
 class Parrot(Engine):
     def __init__(self, client):
