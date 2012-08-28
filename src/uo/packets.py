@@ -356,6 +356,16 @@ class Extended:
                                    (lockbits >> 2) & 0x3,
                                    lockbits & 0x3)
 
+class LocalizedMessage:
+    def __init__(self, packet):
+        self.serial = packet.uint()
+        self.graphic = packet.ushort()
+        self.type = packet.byte()
+        self.hue = packet.ushort()
+        self.font = packet.ushort()
+        self.text = packet.uint()
+        self.name = packet.fixstring(30)
+
 class Ignore:
     def __init__(self, packet):
         pass
@@ -413,6 +423,7 @@ parsers = {
     0xbf: Extended,
     0xbd: Ignore, # ClientVersion
     0xc0: Ignore, # HuedEffect
+    0xc1: LocalizedMessage,
     0xc7: Ignore, # ParticleEffect
     0xd6: Ignore, # AOSToolTip
     0xdc: Ignore, # AOSObjProp
