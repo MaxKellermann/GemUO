@@ -35,6 +35,10 @@ class UOProtocol(Protocol):
         if self.__decompress:
             self._decompress = Decompress()
 
+    def connectionLost(self, reason):
+        Protocol.connectionLost(self, reason)
+        print "connectionLost", repr(reason)
+
     def _packet_from_buffer(self):
         if self._input == '':
             return None
