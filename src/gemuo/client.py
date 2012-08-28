@@ -133,8 +133,6 @@ class AccountLogin(Engine):
             d = self.connect(packet.ip, packet.port, seed=packet.auth_id, decompress=True)
             d.addCallback(lambda client: self._on_connect(client, packet.auth_id))
             d.addErrback(lambda f: self._failure(f))
-            self._client.send(p.GameLogin(self.username, self.password,
-                                          packet.auth_id))
         elif isinstance(packet, p.CharacterList):
             character = packet.find(self.character)
             if character:
