@@ -618,7 +618,7 @@ def TalkUnicode(text, keyword, type=0xc0, hue=0x34, font=1):
 
 def ClientVersion(version):
     p = PacketWriter(0xbd)
-    p.ucstring(version)
+    p.cstring(version)
     return p.finish()
 
 def StatLock(stat, lock):
