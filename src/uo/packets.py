@@ -366,6 +366,12 @@ class LocalizedMessage:
         self.text = packet.uint()
         self.name = packet.fixstring(30)
 
+class ProtocolExtension:
+    def __init__(self, packet):
+        self.extended = packet.byte()
+        if self.extended == 0x00:
+            self.ack = packet.byte()
+
 class Ignore:
     def __init__(self, packet):
         pass
@@ -428,6 +434,7 @@ parsers = {
     0xd6: Ignore, # AOSToolTip
     0xdc: Ignore, # AOSObjProp
     0xdd: Ignore, # DisplayGumpPacked
+    0xf0: ProtocolExtension,
 }
 
 def WalkRequest(direction, seq):
