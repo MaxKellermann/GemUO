@@ -89,6 +89,7 @@ def connect(host, port, *args, **keywords):
 class GameLogin(Engine):
     def __init__(self, client, username, password, auth_id, character):
         Engine.__init__(self, client)
+        self.character = character
 
         client.send(p.GameLogin(username, password, auth_id))
 
@@ -98,7 +99,7 @@ class GameLogin(Engine):
         elif isinstance(packet, p.Relay):
             self._failure("Refusing to follow second relay")
         elif isinstance(packet, p.CharacterList):
-            character = packet.find(character)
+            character = packet.find(self.character)
             if character:
                 self._client.send(p.PlayCharacter(character.slot))
                 self._client.send(p.ClientVersion('5.0.8.3'))
