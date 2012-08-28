@@ -87,6 +87,19 @@ class PacketReader:
     def pstring(self):
         return self.fixstring(self.byte())
 
+    def ucstring(self):
+        x = ''
+        while True:
+            i = self.ushort()
+            if i == 0:
+                break
+            if i < 0x100:
+                ch = chr(i)
+            else:
+                ch = '?'
+            x += ch
+        return x
+
     def ipv4(self):
         return string.join(map(str, struct.unpack('4B', self.data(4))), '.')
 

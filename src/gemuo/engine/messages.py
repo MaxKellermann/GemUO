@@ -26,6 +26,10 @@ class PrintMessages(Engine):
            len(packet.text) > 0 and \
            (packet.text[0] != '[' or packet.text[-1] != ']'):
             log.msg("<%s> %s" % (packet.name, packet.text))
+        elif isinstance(packet, p.UnicodeMessage) and packet.type != 0x06 and \
+           len(packet.text) > 0 and \
+           (packet.text[0] != '[' or packet.text[-1] != ']'):
+            log.msg("<%s> %s" % (packet.name, packet.text))
 
 class Parrot(Engine):
     def __init__(self, client):

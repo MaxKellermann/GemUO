@@ -331,6 +331,17 @@ class ChangeCombatant:
     def __init__(self, packet):
         self.serial = packet.uint()
 
+class UnicodeMessage:
+    def __init__(self, packet):
+        self.serial = packet.uint()
+        self.graphic = packet.ushort()
+        self.type = packet.byte()
+        self.hue = packet.ushort()
+        self.font = packet.ushort()
+        self.language = packet.fixstring(4)
+        self.name = packet.fixstring(30)
+        self.text = packet.ucstring()
+
 class Extended:
     def __init__(self, packet):
         self.extended = packet.ushort()
@@ -395,6 +406,7 @@ parsers = {
     0xa8: ServerList,
     0xa9: CharacterList,
     0xaa: ChangeCombatant,
+    0xae: UnicodeMessage,
     0xb0: Ignore, # DisplayGump
     0xb9: Ignore, # Features
     0xbc: Ignore, # Season
