@@ -26,6 +26,8 @@ class UOProtocol(Protocol):
     def connectionMade(self):
         Protocol.connectionMade(self)
 
+        self.transport.setTcpNoDelay(False)
+
         self.transport.write(struct.pack('>I', self.__seed))
         self._input = ''
 
