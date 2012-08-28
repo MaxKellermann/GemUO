@@ -64,6 +64,9 @@ class PacketReader:
         x, self._data = self._data[:length], self._data[length:]
         return x
 
+    def ulong(self):
+        return struct.unpack('>Q', self.data(8))[0]
+
     def uint(self):
         return struct.unpack('>I', self.data(4))[0]
 

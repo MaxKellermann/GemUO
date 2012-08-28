@@ -45,7 +45,13 @@ class Client:
     def _handle_packet(self, packet):
         if packet.cmd in p.parsers:
             packet = p.parsers[packet.cmd](packet)
-            self.signal('on_packet', packet)
+
+            if isinstance(packet, p.ProtocolExtension) and packet.extended == 0xfe:
+                # BeginRazorHandshake; fake a response to avoid
+                # getting kicked
+                self.send(p.RazorHandshakeResponse())
+            else:
+                self.signal('on_packet', packet)
         else:
             print "No parser for packet:", hex(packet.cmd)
 

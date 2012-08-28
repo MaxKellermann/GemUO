@@ -371,6 +371,9 @@ class ProtocolExtension:
         self.extended = packet.byte()
         if self.extended == 0x00:
             self.ack = packet.byte()
+        elif self.extended == 0xfe:
+            # BeginRazorHandshake
+            self.diallowed_features = packet.ulong()
 
 class Ignore:
     def __init__(self, packet):
@@ -626,4 +629,9 @@ def StatLock(stat, lock):
     p.ushort(0x001a)
     p.byte(stat)
     p.byte(lock)
+    return p.finish()
+
+def RazorHandshakeResponse():
+    p = PacketWriter(0xf0)
+    p.byte(0xff)
     return p.finish()
