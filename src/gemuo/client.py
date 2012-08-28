@@ -129,6 +129,8 @@ class AccountLogin(Engine):
         if isinstance(packet, p.ServerList):
             self._client.send(p.PlayServer(0))
         elif isinstance(packet, p.Relay):
+            self._disconnect()
+
             # connect to the game server
             d = self.connect(packet.ip, packet.port, seed=packet.auth_id, decompress=True)
             d.addCallback(lambda client: self._on_connect(client, packet.auth_id))

@@ -17,15 +17,26 @@ from twisted.internet.defer import Deferred
 
 class Engine:
     def __init__(self, client):
+        assert client is not None
+
         self._client = client
         self._client.add_engine(self)
         self.deferred = Deferred()
 
+    def _disconnect(self):
+        if self._client is not None:
+            self._client._client.transport.abortConnection()
+            self._client = None
+
     def _signal(self, name, *args, **keywords):
+        assert self._client is not None
+
         self._client.signal(name, *args, **keywords)
 
     def __stop(self):
-        self._client.remove_engine(self)
+        if self._client is not None:
+            self._client.remove_engine(self)
+            self._client = None
 
     def _success(self, result=None):
         self.__stop()
