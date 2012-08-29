@@ -426,6 +426,7 @@ parsers = {
     0xa9: CharacterList,
     0xaa: ChangeCombatant,
     0xae: UnicodeMessage,
+    0xaf: Ignore, # CharDeath,
     0xb0: Ignore, # DisplayGump
     0xb9: Ignore, # Features
     0xbc: Ignore, # Season
@@ -434,6 +435,7 @@ parsers = {
     0xc0: Ignore, # HuedEffect
     0xc1: LocalizedMessage,
     0xc7: Ignore, # ParticleEffect
+    0xc8: Ignore, # UpdateRange
     0xd6: Ignore, # AOSToolTip
     0xdc: Ignore, # AOSObjProp
     0xdd: Ignore, # DisplayGumpPacked
