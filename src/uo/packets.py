@@ -403,6 +403,7 @@ parsers = {
     0x55: LoginComplete,
     0x5b: Ignore, # Time
     0x65: Ignore, # Weather
+    0x66: Ignore, # BookPage
     0x6c: TargetRequest, # Target
     0x6d: Ignore, # PlayMusic
     0x6e: Ignore, # CharAction
@@ -428,6 +429,8 @@ parsers = {
     0xae: UnicodeMessage,
     0xaf: Ignore, # CharDeath,
     0xb0: Ignore, # DisplayGump
+    0xb2: Ignore, # ChatRequest
+    0xb8: Ignore, # CharProfile
     0xb9: Ignore, # Features
     0xbc: Ignore, # Season
     0xbf: Extended,
