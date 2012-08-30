@@ -212,7 +212,7 @@ class UseSkill(Engine):
             # get the next target from the list and send TargetResponse
             target, self._targets = self._targets[0], self._targets[1:]
             self._client.send(p.TargetResponse(0, target_id, flags, target.serial,
-                                               0xffff, 0xffff, 0xffff, 0))
+                                               0xffff, 0xffff, -1, 0))
 
             if not self._targets:
                 # all targets have been used: return the target cursor

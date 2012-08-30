@@ -67,7 +67,7 @@ class Tailoring(Engine):
 
     def _on_target_request(self, allow_ground, target_id, flags):
         self._client.send(p.TargetResponse(0, target_id, flags, self.cloth.serial,
-                                           0xffff, 0xffff, 0xffff, 0))
+                                           0xffff, 0xffff, -1, 0))
 
     def on_packet(self, packet):
         if isinstance(packet, p.TargetRequest):
