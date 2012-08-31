@@ -1,7 +1,7 @@
 #
 #  GemUO
 #
-#  (c) 2005-2010 Max Kellermann <max@duempel.org>
+#  (c) 2005-2012 Max Kellermann <max@duempel.org>
 #
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -24,21 +24,34 @@ class TileData:
     def __init__(self, path):
         f = file(path)
 
+        # detect file format
+        f.seek(36)
+        x = f.read(20).rstrip('\0')
+        f.seek(0)
+        if x.find('\0') == -1:
+            # old file format
+            read_flags = lambda f: struct.unpack('<I', f.read(4))[0]
+            item_count = 0x200
+        else:
+            # new file format (>= 7.0)
+            read_flags = lambda f: struct.unpack('<Q', f.read(8))[0]
+            item_count = 0x400
+
         self.land_flags = []
         for a in range(0x200):
             f.seek(4, 1)
             for b in range(0x20):
-                self.land_flags.append(struct.unpack('<I', f.read(4))[0])
+                self.land_flags.append(read_flags(f))
                 f.seek(22, 1) # skip texture and name
         assert len(self.land_flags) == 0x4000
 
         self.item_flags = []
-        for a in range(0x200):
+        for a in range(item_count):
             f.seek(4, 1)
             for b in range(0x20):
-                self.item_flags.append(struct.unpack('<I', f.read(4))[0])
+                self.item_flags.append(read_flags(f))
                 f.seek(33, 1)
-        assert len(self.item_flags) == 0x4000
+        assert len(self.item_flags) == item_count * 0x20
 
     def land_passable(self, id):
         assert id >= 0 and id < len(self.land_flags)
