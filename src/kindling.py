@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 from uo.entity import TREES
+import gemuo.config
 from gemuo.simple import simple_run
 from gemuo.data import TileCache
 from gemuo.entity import Position
@@ -75,7 +76,7 @@ def run(client):
     PrintMessages(client)
     Guards(client)
 
-    tc = TileCache('/home/max/.wine/drive_c/uo')
+    tc = TileCache(gemuo.config.require_data_path())
     m = tc.get_map(0)
     exhaust_db = ExhaustDatabase('/tmp/trees.db')
 

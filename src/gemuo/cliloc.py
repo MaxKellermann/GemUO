@@ -15,8 +15,9 @@
 
 # Loader for the UO client cliloc files.
 
-from os import environ
+import os
 import struct
+import gemuo.config
 
 global_cliloc = None
 
@@ -42,10 +43,14 @@ def load_cliloc_file(path):
 def lookup_cliloc(id):
     global global_cliloc
     if global_cliloc is None:
-        path = '%s/.wine/drive_c/uo/Cliloc.enu' % environ['HOME']
-        try:
-            global_cliloc = load_cliloc_file(path)
-        except:
+        data_path = gemuo.config.get_data_path()
+        if data_path is not None:
+            path = os.path.join(data_path, 'Cliloc.enu')
+            try:
+                global_cliloc = load_cliloc_file(path)
+            except:
+                global_cliloc = dict()
+        else:
             global_cliloc = dict()
 
     if id in global_cliloc:

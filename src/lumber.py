@@ -19,6 +19,7 @@ from twisted.python import log
 from twisted.internet import reactor
 from uo.entity import *
 from uo.multis import multi_passable_at
+import gemuo.config
 from gemuo.entity import Item
 from gemuo.simple import simple_run, simple_later
 from gemuo.data import TileCache
@@ -323,7 +324,7 @@ class BridgeMap:
 
 def begin(client):
     from os import environ
-    tc = TileCache('%s/.wine/drive_c/uo' % environ['HOME'])
+    tc = TileCache(gemuo.config.require_data_path())
     m = BridgeMap(tc.get_map(0), client)
     exhaust_db = ExhaustDatabase('/tmp/trees.db')
 

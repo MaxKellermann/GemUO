@@ -16,6 +16,7 @@
 import os, sys
 import curses, traceback
 from uo.entity import TREES
+import gemuo.config
 from gemuo.simple import simple_run, simple_later
 from gemuo.engine.player import QuerySkills, QueryStats
 from gemuo.data import TileCache
@@ -31,7 +32,7 @@ COLOR_ENEMY = 7
 COLOR_INVULNERABLE = 8
 COLOR_WATER = 9
 
-tc = TileCache('/home/max/.wine/drive_c/uo')
+tc = TileCache(gemuo.config.require_data_path())
 m = tc.get_map(0)
 
 def restorescreen():
