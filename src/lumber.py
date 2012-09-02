@@ -24,6 +24,7 @@ from gemuo.entity import Item
 from gemuo.simple import simple_run, simple_later
 from gemuo.data import TileCache
 from gemuo.entity import Position
+from gemuo.locations import nearest_bank
 from gemuo.exhaust import ExhaustDatabase
 from gemuo.resource import find_statics_resource_block
 from gemuo.defer import deferred_find_player_item
@@ -40,10 +41,6 @@ from gemuo.engine.restock import Restock
 from gemuo.engine.gm import DetectGameMaster
 
 BANK = None
-
-BRITAIN_EAST_BANK = (1646,1598, 1646,1616, 1720,1580)
-MINOC_BANK = (2493,541, 2513,561, 2500,570)
-MOONGLOW_BANK = (4461,1150, 4481,1176, 4442,1200)
 
 random = Random()
 
@@ -329,16 +326,7 @@ def begin(client):
     exhaust_db = ExhaustDatabase('/tmp/trees.db')
 
     global BANK
-    if client.world.player.position.x < 1500:
-        #BANK = BRITAIN_WEST_BANK
-        # XXX implement
-        pass
-    elif client.world.player.position.x < 2000:
-        BANK = BRITAIN_EAST_BANK
-    elif client.world.player.position.x > 3500:
-        BANK = MOONGLOW_BANK
-    else:
-        BANK = MINOC_BANK
+    BANK = nearest_bank(client.world, client.world.player.position)
     print client.world.player.position, BANK
 
     #return Bank(client, m)
