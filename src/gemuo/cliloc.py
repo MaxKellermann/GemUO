@@ -54,6 +54,6 @@ def lookup_cliloc(id):
             global_cliloc = dict()
 
     if id in global_cliloc:
-        return global_cliloc[id]
+        return global_cliloc[id] + ' [%#x]' % id
     else:
         return '%#x' % id
