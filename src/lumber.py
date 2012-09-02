@@ -39,6 +39,7 @@ from gemuo.engine.watch import Watch
 from gemuo.engine.items import OpenBank
 from gemuo.engine.restock import Restock
 from gemuo.engine.gm import DetectGameMaster
+from gemuo.engine.relpor import RelPorCaptcha
 
 BANK = None
 
@@ -336,6 +337,7 @@ def run(client):
     Watch(client)
     Guards(client)
     DetectGameMaster(client)
+    RelPorCaptcha(client)
     PrintMessages(client)
 
     return simple_later(1, begin, client)
