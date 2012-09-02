@@ -75,3 +75,10 @@ class Lumber(Engine):
             self.exhaust_db.set_exhausted(self.tree.x / 8, self.tree.y / 8)
         elif 'You broke your axe' in text:
             self.exhausted = True
+
+    def on_localized_system_message(self, text):
+        if text in (0x7a30d, # not enough wood
+                    0x7a2de, # too far away
+                    ):
+            self.exhausted = True
+            self.exhaust_db.set_exhausted(self.tree.x / 8, self.tree.y / 8)
