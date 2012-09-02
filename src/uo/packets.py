@@ -445,6 +445,45 @@ parsers = {
     0xf0: ProtocolExtension,
 }
 
+def CreateCharacter(name):
+    p = PacketWriter(0x00)
+    p.uint(0xedededed)
+    p.uint(0xffffffff)
+    p.byte(0x00)
+    p.fixstring(name, 30)
+    p.ushort(0x0000)
+    p.uint(0x0000003f) # flags
+    p.uint(0x00000001)
+    p.uint(0x0000000f)
+    p.byte(0x00) # profession
+    p.byte(0x00)
+    p.byte(0x00)
+    p.byte(0x00)
+    p.uint(0x00000000)
+    p.uint(0x00000000)
+    p.byte(0x02) # male?
+    p.byte(0x3c) # str
+    p.byte(0x0a) # dex
+    p.byte(0x0a) # int
+    p.byte(0x19) # is1
+    p.byte(0x27) # vs1
+    p.byte(0x2c) # is2
+    p.byte(0x0b) # vs2
+    p.byte(0x0b) # is3
+    p.byte(0x32) # vs3
+    p.ushort(0x03ea) # hue
+    p.ushort(0x2047) # hair
+    p.ushort(0x044e) # hair hue
+    p.ushort(0x204b) # facial hair
+    p.ushort(0x044e) # facial hair hue
+    p.byte(0x00)
+    p.byte(0x00) # city
+    p.uint(0x00000000) # char slot
+    p.uint(0xdeadbeef) # client ip
+    p.ushort(0x00e0) # shirt hue
+    p.ushort(0x01a1) # pants hue
+    return p.finish()
+
 def WalkRequest(direction, seq):
     p = PacketWriter(0x02)
     p.byte(direction)
