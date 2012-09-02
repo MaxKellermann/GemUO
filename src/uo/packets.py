@@ -13,7 +13,8 @@
 #   GNU General Public License for more details.
 #
 
-from uo.serialize import PacketWriter
+import zlib
+from uo.serialize import decode_ustring_list, PacketWriter
 
 class Damage:
     def __init__(self, packet):
@@ -366,6 +367,22 @@ class LocalizedMessage:
         self.text = packet.uint()
         self.name = packet.fixstring(30)
 
+class DisplayGumpPacked:
+    def __init__(self, packet):
+        self.serial = packet.uint()
+        self.gump_id = packet.uint()
+        self.x = packet.uint()
+        self.y = packet.uint()
+        compressed_layout_length = packet.uint()
+        uncompressed_layout_length = packet.uint()
+        compressed_layout = packet.data(compressed_layout_length - 4)
+        self.layout = zlib.decompress(compressed_layout)
+        text_line_count = packet.uint()
+        compressed_text_length = packet.uint()
+        uncompressed_text_length = packet.uint()
+        compressed_text_data = packet.data(compressed_text_length - 4)
+        self.text = decode_ustring_list(zlib.decompress(compressed_text_data))
+
 class ProtocolExtension:
     def __init__(self, packet):
         self.extended = packet.byte()
@@ -441,7 +458,7 @@ parsers = {
     0xc8: Ignore, # UpdateRange
     0xd6: Ignore, # AOSToolTip
     0xdc: Ignore, # AOSObjProp
-    0xdd: Ignore, # DisplayGumpPacked
+    0xdd: DisplayGumpPacked,
     0xf0: ProtocolExtension,
 }
 

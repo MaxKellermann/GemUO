@@ -21,6 +21,25 @@ def decode_uchar(value):
     else:
         return '?'
 
+def decode_ustring(x):
+    result = u''
+    i = 0
+    while i < len(x):
+        result += decode_uchar(struct.unpack('>H', x[i:i+2])[0])
+        i += 2
+    return result
+
+def decode_ustring_list(x):
+    result = []
+    i = 0
+    while i < len(x):
+        l = struct.unpack('>H', x[i:i+2])[0]
+        i += 2
+        result.append(decode_ustring(x[i:i+l*2]))
+        i += l * 2
+
+    return result
+
 packet_lengths = [
     0x0068, 0x0005, 0x0007, 0x0000, 0x0002, 0x0005, 0x0005, 0x0007, # 0x00
     0x000e, 0x0005, 0x0007, 0x0007, 0x0000, 0x0003, 0x0000, 0x003d, # 0x08
