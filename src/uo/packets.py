@@ -680,6 +680,17 @@ def TalkUnicode(text, keyword, type=0xc0, hue=0x34, font=1):
     p.cstring(text)
     return p.finish()
 
+def GumpResponse(serial, gump_id, button_id=1, switches=[]):
+    p = PacketWriter(0xb1)
+    p.uint(serial)
+    p.uint(gump_id)
+    p.uint(button_id)
+    p.uint(len(switches))
+    for x in switches:
+        p.uint(x)
+    p.uint(0) # number of text responses
+    return p.finish()
+
 def ClientVersion(version):
     p = PacketWriter(0xbd)
     p.cstring(version)
