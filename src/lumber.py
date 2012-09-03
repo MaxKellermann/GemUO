@@ -21,7 +21,7 @@ from uo.entity import *
 import gemuo.config
 from gemuo.simple import simple_run, simple_later
 from gemuo.data import TileCache
-from gemuo.map import BridgeMap, WorldMap
+from gemuo.map import BridgeMap, WorldMap, CacheMap
 from gemuo.entity import Position
 from gemuo.locations import nearest_bank
 from gemuo.exhaust import ExhaustDatabase
@@ -178,6 +178,7 @@ class AutoLumber(Engine):
                                    positions)
         position = Position(nearest[0], nearest[1])
         client = self._client
+        self.map.flush()
         d = PathFindWalk(self._client, self.map, position).deferred
         d.addCallbacks(self._walked, self._walk_failed)
 
@@ -191,6 +192,7 @@ class Bank(Engine):
         self._walk()
 
     def _walk(self):
+        self._map.flush()
         d = PathFindWalkRectangle(self._client, self._map, BANK).deferred
         d.addCallbacks(self._walked, self._walk_failed)
 
@@ -261,7 +263,7 @@ class AutoHarvest(Engine):
 def begin(client):
     from os import environ
     tc = TileCache(gemuo.config.require_data_path())
-    m = WorldMap(BridgeMap(tc.get_map(0)), client.world)
+    m = CacheMap(WorldMap(BridgeMap(tc.get_map(0)), client.world))
     exhaust_db = ExhaustDatabase('/tmp/trees.db')
 
     global BANK

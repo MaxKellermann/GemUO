@@ -103,3 +103,28 @@ class WorldMap:
         x = getattr(self.map, name)
         setattr(self, name, x)
         return x
+
+class CacheMap:
+    """A wrapper for the map class which caches the is_passable()
+    results."""
+
+    def __init__(self, map):
+        self.__map = map
+        self.__cache = dict()
+
+    def flush(self):
+        self.__cache.clear()
+
+    def is_passable(self, x, y, z):
+        k = (x << 20) | (y << 4) | (z + 8)
+        if k in self.__cache:
+            return self.__cache[k]
+
+        result = self.__map.is_passable(x, y, z)
+        self.__cache[k] = result
+        return result
+
+    def __getattr__(self, name):
+        x = getattr(self.__map, name)
+        setattr(self, name, x)
+        return x
