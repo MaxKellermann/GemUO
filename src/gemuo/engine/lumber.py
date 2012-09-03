@@ -13,6 +13,7 @@
 #   GNU General Public License for more details.
 #
 
+from twisted.python import log
 from twisted.internet import reactor
 import uo.packets as p
 from gemuo.engine import Engine
@@ -38,7 +39,19 @@ class Lumber(Engine):
             self._failure(NoSuchEntity('No axe'))
             return
 
+        self.timeout_call = reactor.callLater(8, self._timeout)
         self._begin_chop()
+
+    def _timeout(self):
+        log.msg("Lumber timeout")
+        self.timeout_call = None
+        self.exhausted = True
+        self.exhaust_db.set_exhausted(self.tree.x / 8, self.tree.y / 8)
+
+    def _cancel_timeout(self):
+        if self.timeout_call is None: return
+        self.timeout_call.cancel()
+        self.timeout_call = None
 
     def _begin_chop(self):
         player = self._client.world.player
@@ -76,6 +89,9 @@ class Lumber(Engine):
             self.exhaust_db.set_exhausted(self.tree.x / 8, self.tree.y / 8)
         elif 'You broke your axe' in text:
             self.exhausted = True
+        elif 'put them into your backpack' in text or \
+                 'fail to produce any useable wood' in text:
+            self._cancel_timeout()
 
     def on_localized_system_message(self, text):
         if text in (0x7a30d, # not enough wood
@@ -84,3 +100,7 @@ class Lumber(Engine):
                     ):
             self.exhausted = True
             self.exhaust_db.set_exhausted(self.tree.x / 8, self.tree.y / 8)
+        elif text in (0x105d9c, # You chop ... and put them into your backpack
+                      0x7a30f, # fail to produce any useable wood
+                      ):
+            self._cancel_timeout()
