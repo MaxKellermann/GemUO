@@ -328,7 +328,6 @@ def begin(client):
 
     global BANK
     BANK = nearest_bank(client.world, client.world.player.position)
-    print client.world.player.position, BANK
 
     #return Bank(client, m)
     return AutoHarvest(client, m, exhaust_db)
