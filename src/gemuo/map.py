@@ -116,6 +116,7 @@ class CacheMap:
         self.__cache.clear()
 
     def is_passable(self, x, y, z):
+        if z is None: z = 0
         k = (x << 20) | (y << 4) | (z + 8)
         if k in self.__cache:
             return self.__cache[k]
