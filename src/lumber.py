@@ -21,7 +21,7 @@ from uo.entity import *
 import gemuo.config
 from gemuo.simple import simple_run, simple_later
 from gemuo.data import TileCache
-from gemuo.map import BridgeMap
+from gemuo.map import BridgeMap, WorldMap
 from gemuo.entity import Position
 from gemuo.locations import nearest_bank
 from gemuo.exhaust import ExhaustDatabase
@@ -261,7 +261,7 @@ class AutoHarvest(Engine):
 def begin(client):
     from os import environ
     tc = TileCache(gemuo.config.require_data_path())
-    m = BridgeMap(tc.get_map(0), client.world)
+    m = WorldMap(BridgeMap(tc.get_map(0)), client.world)
     exhaust_db = ExhaustDatabase('/tmp/trees.db')
 
     global BANK
