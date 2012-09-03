@@ -313,6 +313,9 @@ class BridgeMap:
         if x >= 1478 and x <= 1482 and y >= 1639 and y <= 1643: return True
         if x >= 1480 and x <= 1484 and y >= 1639 and y <= 1643: return True
 
+        # Rel Por city walls
+        if x >= 1244 and x <= 1248 and y >= 1428 and y <= 1433: return True
+
         return self.map.is_passable(x, y, z)
 
     def __getattr__(self, name):
