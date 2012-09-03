@@ -35,6 +35,6 @@ def nearest_felucca_bank(world, position):
 
 def nearest_bank(world, position):
     if is_rel_por(world):
-        return (1335,1370, 1349,1381, 1281,1395)
+        return (1335,1369, 1349,1382, 1281,1395)
     else:
         return nearest_felucca_bank(world, position)
