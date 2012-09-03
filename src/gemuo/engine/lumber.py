@@ -97,6 +97,7 @@ class Lumber(Engine):
         if text in (0x7a30d, # not enough wood
                     0x7a2de, # too far away
                     0x7a309, # can't use an axe on that
+                    0x7a20d, # cannot be seen
                     ):
             self.exhausted = True
             self.exhaust_db.set_exhausted(self.tree.x / 8, self.tree.y / 8)
