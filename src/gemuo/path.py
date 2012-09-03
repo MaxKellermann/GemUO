@@ -15,6 +15,7 @@
 
 # Implementation of the A* path finding algorithm.
 
+import heapq
 from uo.entity import *
 
 class Unreachable(Exception):
@@ -78,21 +79,11 @@ def step(map, position):
         if passable_to(map, position, i):
             yield position + direction_vectors[i], i
 
-def nearest(l):
-    """Find the nearest (cheapest) position in the list."""
-    nearest_p, nearest_cost = None, 999999
-    for p, data in l.iteritems():
-        cost, total, direction = data
-        if total < nearest_cost:
-            nearest_p = p
-            nearest_cost = total
-    return nearest_p
-
 def walk_back(l, dest):
     """Generates the whole path, i.e. a list of positions."""
     path = [dest]
     while True:
-        cost, total, direction = l[dest]
+        total, cost, src, direction = l[dest]
         if direction is None:
             break
         dest = dest + direction_vectors[(direction + 4) % 8]
@@ -110,19 +101,22 @@ def path_find(map, src, dest):
         # no-op
         return ()
 
-    open_list = { src: (0, 0, None) }
+    # ( total_cost, cost, src, direction )
+    queue = [ (0, 0, src, None) ]
+    open_list = { src: queue[0] }
     closed_list = dict()
 
     limit = max(dest.square_distance(src), 4000) * 4
     for j in range(limit):
+        if len(queue) == 0:
+            raise Unreachable()
+
         # find the nearest position on the "open" list, and move it to
         # the "closed" list
-        p = nearest(open_list)
-        if p is None:
-            raise Unreachable()
-        cost, total, direction = open_list[p]
+        nearest = heapq.heappop(queue)
+        total, cost, p, direction = nearest
         del open_list[p]
-        closed_list[p] = (cost, total, direction)
+        closed_list[p] = nearest
 
         # calculate the cost of all surrounding tiles
         cost += 1
@@ -136,10 +130,12 @@ def path_find(map, src, dest):
                 n_cost += 1
 
             distance = dest.manhattan_distance(n)
-            open_list[n] = (n_cost, n_cost + distance, d)
+            item = (n_cost + distance, n_cost, n, d)
+            heapq.heappush(queue, item)
+            open_list[n] = item
             if distance == 0:
                 # destination has been reached - terminate
-                closed_list[n] = open_list[n]
+                closed_list[n] = item
                 return walk_back(closed_list, dest)
 
     # give up
