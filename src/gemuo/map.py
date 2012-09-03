@@ -21,14 +21,13 @@ class BridgeMap:
     over bridges.  We havn't implemented walking over statics properly
     yet, but this hack is good enough for now."""
 
-    def __init__(self, map, client):
+    def __init__(self, map, world):
         self.map = map
-        self.client = client
+        self.world = world
         self.statics = map.statics
 
     def is_passable(self, x, y, z):
-        client = self.client
-        world = client.world
+        world = self.world
         try:
             world.lock()
             for e in world.iter_entities_at(x, y):

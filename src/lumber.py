@@ -261,7 +261,7 @@ class AutoHarvest(Engine):
 def begin(client):
     from os import environ
     tc = TileCache(gemuo.config.require_data_path())
-    m = BridgeMap(tc.get_map(0), client)
+    m = BridgeMap(tc.get_map(0), client.world)
     exhaust_db = ExhaustDatabase('/tmp/trees.db')
 
     global BANK
