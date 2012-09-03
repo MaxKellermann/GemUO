@@ -16,20 +16,11 @@
 
 from twisted.internet import reactor
 from uo.entity import *
-import uo.packets as p
-from uo.entity import TREES, ITEMS_AXE
 from gemuo.simple import simple_run
-from gemuo.data import TileCache
-from gemuo.entity import Position, Item
-from gemuo.exhaust import ExhaustDatabase
-from gemuo.resource import find_resource
 from gemuo.engine import Engine
 from gemuo.engine.messages import PrintMessages
 from gemuo.engine.guards import Guards
-from gemuo.engine.equip import Equip
 from gemuo.engine.watch import Watch
-from gemuo.engine.lumber import Lumber
-from gemuo.engine.walk import PathFindWalk
 from gemuo.engine.items import OpenBank
 from gemuo.engine.restock import Restock, Trash
 from gemuo.engine.fletching import TrainFletching

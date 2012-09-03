@@ -22,7 +22,6 @@ from gemuo.engine import Engine
 from gemuo.engine.messages import PrintMessages
 from gemuo.engine.guards import Guards
 from gemuo.engine.watch import Watch
-from gemuo.engine.walk import PathFindWalk
 from gemuo.engine.restock import Restock, Trash
 from gemuo.engine.carpentry import Carpentry
 
