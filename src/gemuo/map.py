@@ -60,23 +60,29 @@ class WorldMap:
         self.map = map
         self.world = world
 
+    def _is_passable(self, world, entity):
+        if isinstance(entity, Item):
+            if entity.item_id in (0x1BC3, # teleporter
+                                  0xF6C, # moongate
+                                  ):
+                # don't step through moongates
+                return False
+            else:
+                return self.map.tile_data.item_passable(entity.item_id & 0x3fff)
+        else:
+            if entity.serial == world.player.serial:
+                return True
+            else:
+                # never step over other mobiles
+                return False
+
     def is_passable(self, x, y, z):
         world = self.world
         try:
             world.lock()
             for e in world.iter_entities_at(x, y):
-                if isinstance(e, Item):
-                    if e.item_id in (0x1BC3, # teleporter
-                                     0xF6C, # moongate
-                                     ):
-                        # don't step through moongates
-                        return False
-                    if not self.map.tile_data.item_passable(e.item_id & 0x3fff):
-                        return False
-                else:
-                    if e.serial != world.player.serial:
-                        # never step over other mobiles
-                        return False
+                if not self._is_passable(world, e):
+                    return False
 
             for i in world.iter_multis():
                 if i.position is not None:
