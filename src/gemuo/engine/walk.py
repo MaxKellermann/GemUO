@@ -13,10 +13,13 @@
 #   GNU General Public License for more details.
 #
 
+from random import Random
 from twisted.internet import reactor, threads
 from uo.entity import *
 from gemuo.error import *
 from gemuo.engine import Engine
+
+random = Random()
 
 class WalkReject(Exception):
     def __init__(self, message='Walk reject'):
