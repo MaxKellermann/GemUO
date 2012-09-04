@@ -19,12 +19,20 @@ from uo.entity import *
 from gemuo.error import *
 from gemuo.entity import Position
 from gemuo.engine import Engine
+from gemuo.path import path_find
 
 random = Random()
 
 class WalkReject(Exception):
     def __init__(self, message='Walk reject'):
         Exception.__init__(self, message)
+
+class Blocked(Exception):
+    """The calculated path or the destination is blocked (temporary
+    failure)."""
+    def __init__(self, position):
+        Exception.__init__(self)
+        self.position = position
 
 def should_run(mobile):
     return mobile.stamina is not None and \
@@ -151,32 +159,22 @@ class PathWalk(Engine):
         print "Walk failed", fail
         reactor.callLater(2, self._next_walk)
 
-class MapWrapper:
-    def __init__(self, map):
-        self.map = map
-        self.bad = []
-
-    def reset(self):
-        self.bad = []
-
-    def is_passable(self, x, y, z):
-        from gemuo.path import Position
-        return self.map.is_passable(x, y, z) and Position(x, y) not in self.bad
-
-    def add_bad(self, x, y):
-        from gemuo.path import Position
-        self.bad.append(Position(x, y))
-
-class PathFindWalk(Engine):
+class PathFindWalkFragile(Engine):
     def __init__(self, client, map, destination):
         Engine.__init__(self, client)
 
         self.player = client.world.player
         self.walk = client.world.walk
-        self.map = MapWrapper(map)
+        self.map = map
         self.destination = destination
 
-        self._path_find()
+        if self.player.position.x == destination.x and \
+           self.player.position.y == destination.y:
+            self._success()
+            return
+
+        d = threads.deferToThread(path_find, map, self.player.position, destination)
+        d.addCallbacks(self._path_found, self._failure)
 
     def _direction(self, src, dest):
         if dest.x < src.x:
@@ -203,7 +201,11 @@ class PathFindWalk(Engine):
 
     def _next_walk(self):
         if len(self._path) == 0:
-            self._path_find()
+            if self.player.position.x == self.destination.x and \
+                   self.player.position.y == self.destination.y:
+                self._success()
+            else:
+                self._failure(Blocked(None))
             return
 
         next = self._path[0]
@@ -216,8 +218,7 @@ class PathFindWalk(Engine):
             return
 
         if not self.map.is_passable(next.x, next.y, position.z):
-            self.map.reset()
-            self._path_find()
+            self._failure(Blocked(next))
             return
 
         direction = self._direction(position, next)
@@ -236,17 +237,6 @@ class PathFindWalk(Engine):
 
         self._client.send(w)
         self._sent.append(next)
-
-    def _path_find(self):
-        if self.player.position.x == self.destination.x and \
-           self.player.position.y == self.destination.y:
-            if self.walk.finished():
-                self._success()
-            return
-
-        from gemuo.path import path_find
-        d = threads.deferToThread(path_find, self.map, self.player.position, self.destination)
-        d.addCallbacks(self._path_found, self._failure)
 
     def _path_found(self, path):
         assert path is not None
@@ -267,16 +257,61 @@ class PathFindWalk(Engine):
     def on_walk_reject(self):
         if self._cleanup() and len(self._sent) >= 2:
             to = self._sent[1]
-            self.map.add_bad(to.x, to.y)
         else:
             to = None
         print "walk reject", to
 
-        self._path_find()
+        self._failure(Blocked(to))
 
     def on_walk_ack(self):
         self._cleanup()
         self._next_walk()
+
+class MapWrapper:
+    def __init__(self, map):
+        self.map = map
+        self.bad = []
+
+    def reset(self):
+        self.bad = []
+
+    def is_passable(self, x, y, z):
+        from gemuo.path import Position
+        return self.map.is_passable(x, y, z) and Position(x, y) not in self.bad
+
+    def add_bad(self, x, y):
+        from gemuo.path import Position
+        self.bad.append(Position(x, y))
+
+class PathFindWalk(Engine):
+    def __init__(self, client, map, destination):
+        Engine.__init__(self, client)
+
+        self.player = client.world.player
+        self.map = MapWrapper(map)
+        self.destination = destination
+
+        self._try()
+
+    def _try(self):
+        d = PathFindWalkFragile(self._client, self.map, self.destination).deferred
+        d.addCallbacks(self._success, self._walk_failed)
+
+    def _walk_failed(self, failure):
+        if not self.map.is_passable(self.destination.x, self.destination.y,
+                                    self.player.position.z):
+            self._failure(failure)
+            return
+
+        if failure.check(Blocked):
+            p = failure.value.position
+            if p is not None:
+                if self.map.is_passable(p.x, p.y, self.player.position.z):
+                    self.map.add_bad(p.x, p.y)
+                else:
+                    self.map.reset()
+
+        self._try()
 
 def PathFindWalkRectangle(client, map, rectangle):
     assert rectangle[0] <= rectangle[2]
