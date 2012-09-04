@@ -20,8 +20,8 @@ MOONGLOW_BANK = (4461,1150, 4481,1176, 4442,1200)
 
 # RelPor Banks
 GALVEN_BANK = (1335,1370, 1349,1381, 1281,1395)
+ARBOR_BANK = (1770,1067, 1770,1085, 1751,1077)
 VERMELL_BANK = (1670,1671, 1695,1678, 1670,1684)
-
 
 def is_rel_por(world):
     """Is this the RelPor freeshard?"""
@@ -43,8 +43,10 @@ def nearest_bank(world, position):
     if is_rel_por(world):
         if position.x < 1500:
             return GALVEN_BANK
+        elif position.y < 1300:
+            return ARBOR_BANK
         else:
-            return VERMELL_BANK
+            return VERMELL_BANK  
     else:
         return nearest_felucca_bank(world, position)
 
