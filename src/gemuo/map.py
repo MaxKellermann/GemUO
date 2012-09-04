@@ -43,7 +43,7 @@ class BridgeMap:
         if x >= 1191 and x <= 1198 and y >= 1335 and y <= 1338: return True
 
         # Bridge east of Rel Por city wall
-        if x >= 1401 and x <= 1344 and y >= 1415 and y <= 1346: return True
+        if x >= 1401 and x <= 1415 and y >= 1344 and y <= 1346: return True
 
         return self.map.is_passable(x, y, z)
 
