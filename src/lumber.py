@@ -14,7 +14,6 @@
 #   GNU General Public License for more details.
 #
 
-from random import Random
 from twisted.python import log
 from twisted.internet import reactor
 from uo.entity import *
@@ -41,8 +40,6 @@ from gemuo.engine.gm import DetectGameMaster
 from gemuo.engine.relpor import RelPorCaptcha
 
 BANK = None
-
-random = Random()
 
 def find_tree(map, exhaust_db, position):
     center = Position((position.x * 7 + BANK[4]) / 8,
