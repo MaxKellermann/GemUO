@@ -13,9 +13,15 @@
 #   GNU General Public License for more details.
 #
 
+# OSI Banks
 BRITAIN_EAST_BANK = (1646,1598, 1646,1616, 1720,1580)
 MINOC_BANK = (2493,541, 2513,561, 2500,570)
 MOONGLOW_BANK = (4461,1150, 4481,1176, 4442,1200)
+
+# RelPor Banks
+GALVEN_BANK = (1335,1370, 1349,1381, 1281,1395)
+VERMELL_BANK = (1670,1671, 1695,1678, 1670,1684)
+
 
 def is_rel_por(world):
     """Is this the RelPor freeshard?"""
@@ -35,6 +41,11 @@ def nearest_felucca_bank(world, position):
 
 def nearest_bank(world, position):
     if is_rel_por(world):
-        return (1335,1369, 1349,1382, 1281,1395)
+        if position.x < 1500:
+            return GALVEN_BANK
+        else:
+            return VERMELL_BANK
     else:
         return nearest_felucca_bank(world, position)
+
+
