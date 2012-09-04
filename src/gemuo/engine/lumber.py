@@ -101,6 +101,8 @@ class Lumber(Engine):
                     ):
             self.exhausted = True
             self.exhaust_db.set_exhausted(self.tree.x / 8, self.tree.y / 8)
+        elif text == 0xfee46: # worn out your tool
+            self.exhausted = True
         elif text in (0x105d9c, # You chop ... and put them into your backpack
                       0x7a30f, # fail to produce any useable wood
                       ):
