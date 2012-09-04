@@ -152,6 +152,9 @@ class MapWrapper:
         self.map = map
         self.bad = []
 
+    def reset(self):
+        self.bad = []
+
     def is_passable(self, x, y, z):
         from gemuo.path import Position
         return self.map.is_passable(x, y, z) and Position(x, y) not in self.bad
@@ -209,6 +212,7 @@ class PathFindWalk(Engine):
             return
 
         if not self.map.is_passable(next.x, next.y, position.z):
+            self.map.reset()
             self._path_find()
             return
 
