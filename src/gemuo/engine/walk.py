@@ -269,3 +269,27 @@ class PathFindWalk(Engine):
     def on_walk_ack(self):
         self._cleanup()
         self._next_walk()
+
+def PathFindWalkRectangle(client, map, rectangle):
+    assert rectangle[0] <= rectangle[2]
+    assert rectangle[1] <= rectangle[3]
+
+    wx = rectangle[2] - rectangle[0]
+    wy = rectangle[3] - rectangle[1]
+
+    player = client.world.player.position
+    x, y = player.x + random.randint(-8, 8), player.y + random.randint(-8, 8)
+    x += random.randint(-wx / 2, wx / 2)
+    y += random.randint(-wy / 2, wy / 2)
+
+    if x < rectangle[0]:
+        x = rectangle[0]
+    elif x > rectangle[2]:
+        x = rectangle[2]
+
+    if y < rectangle[1]:
+        y = rectangle[1]
+    elif y > rectangle[3]:
+        y = rectangle[3]
+
+    return PathFindWalk(client, map, Position(x, y))

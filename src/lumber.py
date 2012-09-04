@@ -33,7 +33,7 @@ from gemuo.engine.messages import PrintMessages
 from gemuo.engine.guards import Guards
 from gemuo.engine.equip import Equip
 from gemuo.engine.lumber import Lumber
-from gemuo.engine.walk import PathFindWalk
+from gemuo.engine.walk import PathFindWalk, PathFindWalkRectangle
 from gemuo.engine.watch import Watch
 from gemuo.engine.items import OpenBank
 from gemuo.engine.restock import Restock
@@ -43,30 +43,6 @@ from gemuo.engine.relpor import RelPorCaptcha
 BANK = None
 
 random = Random()
-
-def PathFindWalkRectangle(client, map, rectangle):
-    assert rectangle[0] <= rectangle[2]
-    assert rectangle[1] <= rectangle[3]
-
-    wx = rectangle[2] - rectangle[0]
-    wy = rectangle[3] - rectangle[1]
-
-    player = client.world.player.position
-    x, y = player.x + random.randint(-8, 8), player.y + random.randint(-8, 8)
-    x += random.randint(-wx / 2, wx / 2)
-    y += random.randint(-wy / 2, wy / 2)
-
-    if x < rectangle[0]:
-        x = rectangle[0]
-    elif x > rectangle[2]:
-        x = rectangle[2]
-
-    if y < rectangle[1]:
-        y = rectangle[1]
-    elif y > rectangle[3]:
-        y = rectangle[3]
-
-    return PathFindWalk(client, map, Position(x, y))
 
 def find_tree(map, exhaust_db, position):
     center = Position((position.x * 7 + BANK[4]) / 8,
