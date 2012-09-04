@@ -24,7 +24,7 @@ from gemuo.map import BridgeMap, WorldMap, CacheMap
 from gemuo.entity import Position
 from gemuo.locations import nearest_bank
 from gemuo.exhaust import ExhaustDatabase
-from gemuo.resource import find_statics_resource_block
+from gemuo.resource import find_statics_resource_block, reachable_resource
 from gemuo.defer import deferred_find_player_item
 from gemuo.target import Target
 from gemuo.engine import Engine
@@ -68,16 +68,6 @@ def nearest_position(player, positions):
             nearest_position = p
             nearest_distance2 = d
     return nearest_position
-
-def is_reachable(a, b, distance):
-    return a.x >= b.x - distance and a.x <= b.x + distance and \
-           a.y >= b.y - distance and a.y <= b.y + distance
-
-def reachable_resource(player, resources, distance):
-    for r in resources:
-        if is_reachable(player, r, distance):
-            return r
-    return None
 
 class AutoLumber(Engine):
     def __init__(self, client, map, exhaust_db):

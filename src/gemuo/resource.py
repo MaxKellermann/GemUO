@@ -87,3 +87,13 @@ def find_land_resource(map, position, ids, exhaust_db=None, func=None):
                     if func is None or func(item_id, spiral.x * 8 + x, spiral.y * 8 + y, z):
                         return item_id, spiral.x * 8 + x, spiral.y * 8 + y, z
         spiral.step()
+
+def is_reachable(a, b, distance):
+    return a.x >= b.x - distance and a.x <= b.x + distance and \
+           a.y >= b.y - distance and a.y <= b.y + distance
+
+def reachable_resource(player, resources, distance):
+    for r in resources:
+        if is_reachable(player, r, distance):
+            return r
+    return None
