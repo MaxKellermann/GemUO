@@ -17,6 +17,7 @@ from random import Random
 from twisted.internet import reactor, threads
 from uo.entity import *
 from gemuo.error import *
+from gemuo.entity import Position
 from gemuo.engine import Engine
 
 random = Random()
