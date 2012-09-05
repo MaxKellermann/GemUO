@@ -376,3 +376,49 @@ def PathFindWalkRectangle(client, map, rectangle):
         destinations.append(Position(rectangle[2], y))
 
     return PathFindWalkAny(client, map, destinations)
+
+class PathFindWalkNear(Engine):
+    def __init__(self, client, map, destination, distance):
+        Engine.__init__(self, client)
+
+        self.player = client.world.player
+        self.map = MapWrapper(map)
+        self.destination = destination
+        self.distance = distance
+
+        self._try()
+
+    def _try(self):
+        destinations = []
+
+        for x in range(self.destination.x - self.distance,
+                       self.destination.x + self.distance):
+            for y in range(self.destination.y - self.distance,
+                           self.destination.y + self.distance):
+                p = Position(x, y)
+                if self.destination.manhattan_distance(p) < self.distance:
+                    destinations.append(p)
+
+        destination = choose_destination(self.map,
+                                         self.player.position,
+                                         destinations)
+        if destination is None:
+            self._failure(Unreachable())
+            return
+
+        d = PathFindWalkFragile(self._client, self.map, destination).deferred
+        d.addCallbacks(self._success, self._walk_failed)
+
+    def _walk_failed(self, failure):
+        if failure.check(Blocked):
+            p = failure.value.position
+            if p is not None:
+                if self.map.is_passable(p.x, p.y, self.player.position.z):
+                    self.map.add_bad(p.x, p.y)
+                else:
+                    self.map.reset()
+        elif failure.check(Unreachable):
+            self._failure(failure)
+            return
+
+        self._try()
