@@ -123,6 +123,12 @@ class Restock(Engine):
         world = client.world
 
         n = 0
+        for x in world.items_in(self._client.world.player):
+            if x.item_id in item_ids:
+                if x.amount is None:
+                    n += 1
+                else:
+                    n += x.amount
         for x in world.items_in(self._source):
             if x.item_id in item_ids:
                 if x.amount is None:
