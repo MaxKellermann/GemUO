@@ -16,6 +16,7 @@
 
 from twisted.python import log
 from twisted.internet import reactor
+from uo.skills import *
 from uo.entity import *
 import gemuo.config
 from gemuo.simple import simple_run, simple_later
@@ -38,6 +39,7 @@ from gemuo.engine.items import OpenBank
 from gemuo.engine.restock import Restock
 from gemuo.engine.gm import DetectGameMaster
 from gemuo.engine.relpor import RelPorCaptcha
+from gemuo.engine.training import SkillTraining
 
 BANK = None
 
@@ -215,6 +217,7 @@ def run(client):
     DetectGameMaster(client)
     RelPorCaptcha(client)
     PrintMessages(client)
+    SkillTraining(client, (SKILL_HIDING,), round_robin=False)
 
     return simple_later(1, begin, client)
 
