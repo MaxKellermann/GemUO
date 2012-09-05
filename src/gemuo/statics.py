@@ -33,7 +33,7 @@ def iter_static_near(map, x, y, max_distance, ids):
     block_min_y = (y - max_distance) / 8
     block_max_y = (y + max_distance) / 8
 
-    for block_x in range(block_min_x, block_max_x + x):
+    for block_x in range(block_min_x, block_max_x + 1):
         for block_y in range(block_min_y, block_max_y + 1):
             for r in iter_statics_in_block(map, block_x, block_y, ids):
                 distance = abs(r.x - x) + abs(r.y - y)
