@@ -185,6 +185,7 @@ class AutoHarvest(Engine):
 
     def _check(self):
         if self.player.mass_remaining() < 50 or self.world.combatant is not None:
+            log.msg("Flee to safe place until combat is over")
             self._restock()
         else:
             d = deferred_find_player_item(self._client, lambda x: x.item_id in ITEMS_AXE)

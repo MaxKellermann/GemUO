@@ -50,6 +50,12 @@ class Guards(Engine):
 
     def on_combatant(self, serial):
         if serial != 0:
+            if serial in self._client.world.entities:
+                m = self._client.world.entities[serial]
+            else:
+                m = hex(serial)
+            log.msg("Attack from " + str(m))
+
             self.call_guards()
 
     def on_swing(self, flag, attacker_serial, defender_serial):
