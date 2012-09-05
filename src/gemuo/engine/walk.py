@@ -173,6 +173,7 @@ class PathFindWalkFragile(Engine):
             self._success()
             return
 
+        map.flush_cache()
         d = threads.deferToThread(path_find, map, self.player.position, destination)
         d.addCallbacks(self._path_found, self._failure)
 
@@ -216,6 +217,9 @@ class PathFindWalkFragile(Engine):
         if position is None:
             self._failure(MissingData('Player position is missing'))
             return
+
+        m = self.map
+        m.flush_cache()
 
         if not self.map.is_passable(next.x, next.y, position.z):
             self._failure(Blocked(next))
@@ -282,6 +286,11 @@ class MapWrapper:
     def add_bad(self, x, y):
         from gemuo.path import Position
         self.bad.append(Position(x, y))
+
+    def __getattr__(self, name):
+        x = getattr(self.map, name)
+        setattr(self, name, x)
+        return x
 
 class PathFindWalk(Engine):
     def __init__(self, client, map, destination):
