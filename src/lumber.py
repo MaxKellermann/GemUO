@@ -32,7 +32,7 @@ from gemuo.engine.messages import PrintMessages
 from gemuo.engine.guards import Guards
 from gemuo.engine.equip import Equip
 from gemuo.engine.lumber import Lumber
-from gemuo.engine.walk import PathFindWalk, PathFindWalkRectangle
+from gemuo.engine.walk import PathFindWalkRectangle, PathFindWalkAny
 from gemuo.engine.watch import Watch
 from gemuo.engine.items import OpenBank
 from gemuo.engine.restock import Restock
@@ -53,21 +53,6 @@ def passable_positions_around(map, x, y, z, distance):
             if map.is_passable(ix, iy, z):
                 positions.append((ix, iy))
     return positions
-
-def distance2(a, b):
-    dx = a[0] - b[0]
-    dy = a[1] - b[1]
-    return dx*dx + dy*dy
-
-def nearest_position(player, positions):
-    nearest_position = None
-    nearest_distance2 = 999999
-    for p in positions:
-        d = distance2(player, p)
-        if d < nearest_distance2:
-            nearest_position = p
-            nearest_distance2 = d
-    return nearest_position
 
 class AutoLumber(Engine):
     def __init__(self, client, map, exhaust_db):
@@ -128,21 +113,10 @@ class AutoLumber(Engine):
         positions = set()
         for resource in self.trees:
             for p in passable_positions_around(self.map, resource.x, resource.y, resource.z, 2):
-                positions.add(p)
+                positions.add(Position(p[0], p[1]))
 
-        if len(positions) == 0:
-            # no reachable position; try again
-            resource = self.trees[0]
-            self.exhaust_db.set_exhausted(resource.x/8, resource.y/8)
-            reactor.callLater(0.1, self._walk)
-            return
-
-        nearest = nearest_position((self.player.position.x, self.player.position.y),
-                                   positions)
-        position = Position(nearest[0], nearest[1])
-        client = self._client
         self.map.flush()
-        d = PathFindWalk(self._client, self.map, position).deferred
+        d = PathFindWalkAny(self._client, self.map, positions).deferred
         d.addCallbacks(self._walked, self._walk_failed)
 
 class Bank(Engine):
