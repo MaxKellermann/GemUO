@@ -19,7 +19,7 @@ from uo.entity import *
 from gemuo.error import *
 from gemuo.entity import Position
 from gemuo.engine import Engine
-from gemuo.path import path_find
+from gemuo.path import path_find, Unreachable
 
 random = Random()
 
@@ -313,26 +313,66 @@ class PathFindWalk(Engine):
 
         self._try()
 
+def choose_destination(map, player_position, destinations):
+    destinations = filter(lambda p: map.is_passable(p.x, p.y, 0),
+                          destinations)
+    if len(destinations) == 0:
+        return None
+
+    destinations = list(destinations)
+
+    def cmp_distance(a, b):
+        return cmp(player_position.manhattan_distance(a),
+                   player_position.manhattan_distance(b))
+
+    destinations.sort(cmp=cmp_distance)
+    if len(destinations) > 8:
+        destinations = destinations[0:len(destinations)/2]
+    return destinations[random.randint(0, len(destinations) - 1)]
+
+class PathFindWalkAny(Engine):
+    def __init__(self, client, map, destinations):
+        Engine.__init__(self, client)
+
+        self.player = client.world.player
+        self.map = MapWrapper(map)
+        self.destinations = destinations
+
+        self._try()
+
+    def _try(self):
+        destination = choose_destination(self.map,
+                                         self.player.position,
+                                         self.destinations)
+        if destination is None:
+            self._failure(Unreachable())
+            return
+
+        d = PathFindWalkFragile(self._client, self.map, destination).deferred
+        d.addCallbacks(self._success, self._walk_failed)
+
+    def _walk_failed(self, failure):
+        if failure.check(Blocked):
+            p = failure.value.position
+            if p is not None:
+                if self.map.is_passable(p.x, p.y, self.player.position.z):
+                    self.map.add_bad(p.x, p.y)
+                else:
+                    self.map.reset()
+
+        self._try()
+
 def PathFindWalkRectangle(client, map, rectangle):
     assert rectangle[0] <= rectangle[2]
     assert rectangle[1] <= rectangle[3]
 
-    wx = rectangle[2] - rectangle[0]
-    wy = rectangle[3] - rectangle[1]
+    destinations = []
+    for x in range(rectangle[0], rectangle[2] + 1):
+        destinations.append(Position(x, rectangle[1]))
+        destinations.append(Position(x, rectangle[3]))
 
-    player = client.world.player.position
-    x, y = player.x + random.randint(-8, 8), player.y + random.randint(-8, 8)
-    x += random.randint(-wx / 2, wx / 2)
-    y += random.randint(-wy / 2, wy / 2)
+    for y in range(rectangle[1] + 1, rectangle[3]):
+        destinations.append(Position(rectangle[0], y))
+        destinations.append(Position(rectangle[2], y))
 
-    if x < rectangle[0]:
-        x = rectangle[0]
-    elif x > rectangle[2]:
-        x = rectangle[2]
-
-    if y < rectangle[1]:
-        y = rectangle[1]
-    elif y > rectangle[3]:
-        y = rectangle[3]
-
-    return PathFindWalk(client, map, Position(x, y))
+    return PathFindWalkAny(client, map, destinations)
