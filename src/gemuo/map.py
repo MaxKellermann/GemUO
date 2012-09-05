@@ -112,7 +112,7 @@ class CacheMap:
         self.__map = map
         self.__cache = dict()
 
-    def flush(self):
+    def flush_cache(self):
         self.__cache.clear()
 
     def is_passable(self, x, y, z):

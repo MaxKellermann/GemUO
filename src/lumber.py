@@ -115,7 +115,7 @@ class AutoLumber(Engine):
             for p in passable_positions_around(self.map, resource.x, resource.y, resource.z, 2):
                 positions.add(Position(p[0], p[1]))
 
-        self.map.flush()
+        self.map.flush_cache()
         d = PathFindWalkAny(self._client, self.map, positions).deferred
         d.addCallbacks(self._walked, self._walk_failed)
 
@@ -129,7 +129,7 @@ class Bank(Engine):
         self._walk()
 
     def _walk(self):
-        self._map.flush()
+        self._map.flush_cache()
         d = PathFindWalkRectangle(self._client, self._map, BANK).deferred
         d.addCallbacks(self._walked, self._walk_failed)
 
