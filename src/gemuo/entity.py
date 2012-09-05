@@ -30,6 +30,9 @@ class Position:
         if self.direction is not None: s += ";%d" % self.direction
         return s
 
+    def manhattan_distance(self, other):
+        return abs(self.x - other.x) + abs(self.y - other.y)
+
 class BoundedValue:
     def __init__(self, value, limit):
         self.value = value
