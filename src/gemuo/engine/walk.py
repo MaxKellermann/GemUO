@@ -221,9 +221,10 @@ class PathFindWalkFragile(Engine):
         m = self.map
         m.flush_cache()
 
-        if not self.map.is_passable(next.x, next.y, position.z):
-            self._failure(Blocked(next))
-            return
+        for q in self._path:
+            if not self.map.is_passable(q.x, q.y, position.z):
+                self._failure(Blocked(q))
+                return
 
         direction = self._direction(position, next)
         if direction is None:
