@@ -197,6 +197,10 @@ class MapGlue:
 
         return True
 
+    def flush_cache(self):
+        # not implemented in this base class
+        pass
+
 class BlockCache:
     def __init__(self, loader):
         self._loader = loader
