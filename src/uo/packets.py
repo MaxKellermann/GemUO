@@ -379,9 +379,12 @@ class DisplayGumpPacked:
         self.layout = zlib.decompress(compressed_layout)
         text_line_count = packet.uint()
         compressed_text_length = packet.uint()
-        uncompressed_text_length = packet.uint()
-        compressed_text_data = packet.data(compressed_text_length - 4)
-        self.text = decode_ustring_list(zlib.decompress(compressed_text_data))
+        if compressed_text_length > 0:
+            uncompressed_text_length = packet.uint()
+            compressed_text_data = packet.data(compressed_text_length - 4)
+            self.text = decode_ustring_list(zlib.decompress(compressed_text_data))
+        else:
+            self.text = ()
 
 class ProtocolExtension:
     def __init__(self, packet):
