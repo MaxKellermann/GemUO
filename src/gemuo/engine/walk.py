@@ -35,6 +35,10 @@ class Blocked(Exception):
         self.position = position
 
 def should_run(mobile):
+    if mobile.is_dead():
+        # ghosts can always run
+        return True
+
     return mobile.stamina is not None and \
            (mobile.stamina.value >= 20 or \
             mobile.stamina.value >= mobile.stamina.limit / 2)

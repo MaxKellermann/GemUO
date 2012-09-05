@@ -37,6 +37,7 @@ from gemuo.engine.walk import PathFindWalkRectangle, PathFindWalkAny
 from gemuo.engine.watch import Watch
 from gemuo.engine.items import OpenBank
 from gemuo.engine.restock import Restock
+from gemuo.engine.death import AutoResurrect
 from gemuo.engine.gm import DetectGameMaster
 from gemuo.engine.relpor import RelPorCaptcha
 from gemuo.engine.training import SkillTraining
@@ -71,7 +72,7 @@ class AutoLumber(Engine):
         self._walk()
 
     def _lumbered(self, result):
-        if self.player.mass_remaining() < 50 or self.world.combatant is not None:
+        if self.player.is_dead() or self.player.mass_remaining() < 50 or self.world.combatant is not None:
             # too heavy, finish this engine
             self._success()
             return
@@ -168,6 +169,11 @@ class AutoHarvest(Engine):
         self._check()
 
     def _restocked(self, result):
+        if self.player.is_dead():
+            log.msg("Waiting for resurrection")
+            reactor.callLater(10, self._check)
+            return
+
         if self.world.combatant is not None:
             log.msg("Waiting until combat is over")
             reactor.callLater(5, self._restocked, result)
@@ -186,7 +192,10 @@ class AutoHarvest(Engine):
         self._restock()
 
     def _check(self):
-        if self.player.mass_remaining() < 50 or self.world.combatant is not None:
+        if self.player.is_dead():
+            log.msg("Waiting for resurrection")
+            reactor.callLater(10, self._check)
+        elif self.player.mass_remaining() < 50 or self.world.combatant is not None:
             log.msg("Flee to safe place until combat is over")
             self._restock()
         else:
@@ -207,6 +216,8 @@ def begin(client):
 
     global BANK
     BANK = nearest_bank(client.world, client.world.player.position)
+
+    AutoResurrect(client, m)
 
     #return Bank(client, m)
     return AutoHarvest(client, m, exhaust_db)

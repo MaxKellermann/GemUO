@@ -1,3 +1,4 @@
+#!/usr/bin/python#
 #
 #  GemUO
 #
@@ -15,14 +16,16 @@
 #
 
 import uo.packets as p
-from gemuo.engine import Engine
+import gemuo.config
+from gemuo.simple import simple_run
+from gemuo.data import TileCache
+from gemuo.map import BridgeMap, WorldMap, CacheMap
+from gemuo.engine.death import AutoResurrect
 
-class GetRessed(Engine):
+def run(client):
+    tc = TileCache(gemuo.config.require_data_path())
+    m = CacheMap(WorldMap(BridgeMap(tc.get_map(0)), client.world))
 
-    def __init__(self, client):
-        Engine.__init__(self, client)
+    return AutoResurrect(client, m)
 
-    def on_packet(self, packet):
-        if isinstance(packet, p.Menu):
-            if packet.title == "It is possible for you to be resurrected now. Do you wish to try?":
-                self._client.send(p.MenuResponse(packet.dialog_serial, 01))
+simple_run(run)

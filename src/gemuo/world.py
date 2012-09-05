@@ -89,6 +89,9 @@ class World(Engine):
         if mobile is None: return None
         return self.equipped_item(mobile, 0x1d)
 
+    def is_dead(self):
+        return self.player is not None and self.player.is_dead()
+
     def find_item_in(self, parent, func):
         for x in self.items_in(parent):
             if func(x): return x

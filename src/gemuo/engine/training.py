@@ -350,6 +350,10 @@ class SkillTraining(Engine):
     def _do_next(self):
         assert self._use is None
 
+        if self._client.is_dead():
+            self.call_id = reactor.callLater(10, self._do_next)
+            return
+
         self._current = skill = self._next_skill()
         assert skill is not None
 

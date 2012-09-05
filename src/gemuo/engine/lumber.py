@@ -111,3 +111,6 @@ class Lumber(Engine):
     def on_combatant(self, serial):
         if serial != 0:
             self.exhausted = True
+
+    def on_death(self):
+        self.exhausted = True

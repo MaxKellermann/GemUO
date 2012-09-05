@@ -31,3 +31,5 @@ class Translate(Engine):
             if packet.type == 0 and packet.serial == 0xffffffff and \
                packet.name == 'System':
                 self._signal('on_localized_system_message', packet.text)
+        elif isinstance(packet, p.Death):
+            self._signal('on_death')

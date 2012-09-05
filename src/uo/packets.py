@@ -146,6 +146,10 @@ class ContainerItem:
         self.parent_serial = packet.uint()
         self.hue = packet.ushort()
 
+class Death:
+    def __init__(self, packet):
+        self.type = packet.byte()
+
 class EquipItem:
     def __init__(self, packet):
         self.serial = packet.uint()
@@ -412,6 +416,7 @@ parsers = {
     0x23: Ignore, # DragAnimation
     0x24: OpenContainer,
     0x25: ContainerItem,
+    0x2c: Death,
     0x2e: EquipItem,
     0x2f: Swing,
     0x3a: SkillUpdate,

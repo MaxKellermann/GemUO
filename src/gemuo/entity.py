@@ -1,7 +1,7 @@
 #
 #  GemUO
 #
-#  (c) 2005-2010 Max Kellermann <max@duempel.org>
+#  (c) 2005-2012 Max Kellermann <max@duempel.org>
 #
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -120,6 +120,9 @@ class Mobile(Entity):
 
     def is_animal(self):
         return self.body in ANIMALS
+
+    def is_dead(self):
+        return self.body in BODY_DEAD
 
     def mass_remaining(self):
         """Returns the mass this mobile can pick up (in stones).

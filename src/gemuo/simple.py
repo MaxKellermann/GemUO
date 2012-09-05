@@ -43,6 +43,9 @@ class SimpleClientWrapper:
         self.translate = Translate(client)
         self.target_mutex = TargetMutex()
 
+    def is_dead(self):
+        return self.world.is_dead()
+
     def __getattr__(self, name):
         x = getattr(self.client, name)
         setattr(self, name, x)

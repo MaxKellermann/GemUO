@@ -16,11 +16,10 @@
 #
 
 from gemuo.simple import simple_run
-from gemuo.engine.ress import GetRessed
+from gemuo.engine.death import AcceptResurrect
 import uo.packets as p
 
 def run(client):
-    client.send(p.WarMode(True))
-    return GetRessed(client)
+    return AcceptResurrect(client)
 
 simple_run(run)
