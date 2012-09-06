@@ -115,8 +115,15 @@ class PathWalk(Engine):
 
         self.player = client.world.player
         self.path = list(path)
+        self.__walk = None
 
         self._next_walk()
+
+    def abort(self):
+        if self.__walk is not None:
+            self.__walk.cancel()
+            self.__walk = None
+        Engine.abort(self)
 
     def _distance2(self, position):
         player = self.player.position
@@ -148,15 +155,17 @@ class PathWalk(Engine):
             return
 
         print "Walk to", nearest, nearest_distance2
-        d = DirectWalk(self._client, nearest).deferred
-        d.addCallbacks(self._walked, self._walk_failed)
+        self.__walk = DirectWalk(self._client, nearest).deferred
+        self.__walk.addCallbacks(self._walked, self._walk_failed)
 
     def _walked(self, result):
+        self.__walk = None
         self.path = self.path[1:]
         self._next_walk()
 
     def _walk_failed(self, fail):
         print "Walk failed", fail
+        self.__walk = None
         reactor.callLater(2, self._next_walk)
 
 class PathFindWalkFragile(Engine):
@@ -175,8 +184,14 @@ class PathFindWalkFragile(Engine):
             return
 
         map.flush_cache()
-        d = threads.deferToThread(path_find, map, self.player.position, destination)
-        d.addCallbacks(self._path_found, self._failure)
+        self.__find = threads.deferToThread(path_find, map, self.player.position, destination)
+        self.__find.addCallbacks(self._path_found, self._failure)
+
+    def abort(self):
+        if self.__find is not None:
+            self.__find.cancel()
+            self.__find = None
+        Engine.abort(self)
 
     def _direction(self, src, dest):
         if dest.x < src.x:
@@ -247,6 +262,7 @@ class PathFindWalkFragile(Engine):
     def _path_found(self, path):
         assert path is not None
 
+        self.__find = None
         self._path = list(path)
         self._sent = [self.player.position]
         self._next_walk()
@@ -261,6 +277,10 @@ class PathFindWalkFragile(Engine):
         return False
 
     def on_walk_reject(self):
+        if self.__find is not None:
+            # not our reject, we're still finding the path
+            return
+
         if self._cleanup() and len(self._sent) >= 2:
             to = self._sent[1]
         else:
@@ -396,8 +416,15 @@ class PathFindWalkNear(Engine):
         self.map = MapWrapper(map)
         self.destination = destination
         self.distance = distance
+        self.__walk = None
 
         self._try()
+
+    def abort(self):
+        if self.__walk is not None:
+            self.__walk.cancel()
+            self.__walk = None
+        Engine.abort(self)
 
     def _try(self):
         destinations = []
@@ -417,10 +444,12 @@ class PathFindWalkNear(Engine):
             self._failure(Unreachable())
             return
 
-        d = PathFindWalkFragile(self._client, self.map, destination).deferred
-        d.addCallbacks(self._success, self._walk_failed)
+        self.__walk = d = PathFindWalkFragile(self._client, self.map, destination).deferred
+        self.__walk.addCallbacks(self._success, self._walk_failed)
 
     def _walk_failed(self, failure):
+        self.__walk = None
+
         if failure.check(Blocked):
             p = failure.value.position
             if p is not None:
