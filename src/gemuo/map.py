@@ -45,6 +45,10 @@ class BridgeMap:
         # Bridge east of Rel Por city wall
         if x >= 1401 and x <= 1415 and y >= 1344 and y <= 1346: return True
 
+        # RelPor Healer
+        if (x == 1281 or x == 1282) and y == 1335: return True
+        if x >= 1279 and x <= 1285 and y >= 1325 and y <= 1334: return True
+
         return self.map.is_passable(x, y, z)
 
     def __getattr__(self, name):
