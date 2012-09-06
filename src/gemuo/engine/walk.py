@@ -167,6 +167,7 @@ class PathFindWalkFragile(Engine):
         self.walk = client.world.walk
         self.map = map
         self.destination = destination
+        self._sent = []
 
         if self.player.position.x == destination.x and \
            self.player.position.y == destination.y:
