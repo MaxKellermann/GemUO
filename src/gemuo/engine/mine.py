@@ -105,7 +105,7 @@ class Mine(Engine):
             self.exhaust_db.set_exhausted(self.mountain.x / 8, self.mountain.y / 8)
         elif text == 0xfee46: # worn out your tool
             self.exhausted = True
-        elif text in (0xf5de0, 0xf5de1, 0xf5de2, # put it in your backpack
+        elif text in (0xf5de0, 0xf5de1, 0xf5de2, 0xf5de3, 0xf5de4, 0xf5de5, 0xf5de6, 0xf5de7, # put it in your backpack
                       0x7ad03, # fail to find any useable ore
                       ):
             self._cancel_timeout()
