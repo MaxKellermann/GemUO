@@ -113,7 +113,7 @@ class AutoMine(Engine):
         self._walk()
 
 def player_can_melt(player):
-    return player.is_skill_above(player, SKILL_MINING, 35)
+    return player.is_skill_above(SKILL_MINING, 35)
 
 def is_ore(i):
     return i.item_id in ITEMS_ORE
