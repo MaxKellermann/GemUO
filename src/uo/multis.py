@@ -66,7 +66,7 @@ def multi_passable_at(item_id, x, y, z):
         # large patio
         return standard_multi_passable_at(-7, -7, 15, 14, -4, 6, 2, x, y, z)
 
-    if item_id == 0x98 or item_id == 0xa3 or item_id == 0xc4 or item_id == 0xc2 or item_id == 0xc5 or item_id == 0xa4 or item_id == 0xa8 or item_id in (0xad, 0xb4, 0xb5, 0xbb, 0xc3):
+    if item_id == 0x98 or item_id == 0xa3 or item_id == 0xc4 or item_id == 0xc2 or item_id == 0xc5 or item_id == 0xa4 or item_id == 0xa8 or item_id in (0xad, 0xb4, 0xb5, 0xb8, 0xbb, 0xc3):
         # TODO: medium brick? these dimensions are not correct, just a kludge
         return standard_multi_passable_at(-7, -7, 14, 14, -1, 6, 2, x, y, z)
 
