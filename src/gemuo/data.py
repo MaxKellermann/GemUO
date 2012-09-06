@@ -19,6 +19,7 @@ import os
 import struct
 
 FLAG_IMPASSABLE = 0x40
+FLAG_SURFACE = 0x200
 
 class TileData:
     def __init__(self, path):
@@ -60,6 +61,10 @@ class TileData:
     def item_passable(self, id):
         assert id >= 0 and id < len(self.item_flags)
         return (self.item_flags[id] & FLAG_IMPASSABLE) == 0
+
+    def item_surface(self, id):
+        assert id >= 0 and id < len(self.item_flags)
+        return (self.item_flags[id] & FLAG_SURFACE) == 0
 
 class LandBlock:
     def __init__(self, data):
@@ -110,10 +115,19 @@ class IndexLoader:
             return None, 0
         return offset, length
 
+class Static:
+    def __init__(self, id, x, y, z, hue=None):
+        self.id = id
+        self.x = x
+        self.y = y
+        self.z = z
+        self.hue = hue
+
 class StaticsList:
     def __init__(self, data):
         self.data = data
         self.passable = None # bit field, see _build_passable()
+        self.surface = None
 
     def __iter__(self):
         i = 0
@@ -141,6 +155,21 @@ class StaticsList:
             self._build_passable(tile_data)
         bit = x * 8 + y
         return (self.passable & (1 << bit)) != 0
+
+    def _build_surface(self, tile_data):
+        # each of the 64 bits tells whether the position is surface
+        surface = 0L
+        for id, x, y, z, hue in self:
+            if not tile_data.item_surface(id):
+                bit = x * 8 + y
+                surface |= 1 << bit
+        self.surface = surface
+
+    def is_surface(self, tile_data, x, y):
+        if self.surface is None:
+            self._build_surface(tile_data)
+        bit = x * 8 + y
+        return (self.surface & (1 << bit)) != 0
 
 class StaticsLoader:
     def __init__(self, path):
@@ -184,18 +213,28 @@ class MapGlue:
         return block.iter_at(x % 8, y %8)
 
     def is_passable(self, x, y, z):
+        statics = self.statics.load_block(x / 8, y / 8)
+        if statics is not None and not statics.is_passable(self.tile_data, x % 8, y % 8, z):
+            return False
+
+        # even if land is impassable, there may be statics that build
+        # a "surface" to walk on
         block = self.land.load_block(x / 8, y / 8)
-        if not self.tile_data.land_passable(block.get_id(x % 8, y % 8)):
+        if not self.tile_data.land_passable(block.get_id(x % 8, y % 8)) and \
+            (statics is None or not statics.is_surface(self.tile_data, x % 8, y % 8)):
             return False
 
         #bz = block.get_height(x % 8, y % 8)
         #if bz > z: return False
 
-        statics = self.statics.load_block(x / 8, y / 8)
-        if statics is not None and not statics.is_passable(self.tile_data, x % 8, y % 8, z):
-            return False
-
         return True
+
+    def surface_at(self, x, y):
+        for id, z, hue in self.statics_at(x, y):
+            if self.tile_data.item_surface(id):
+                return Static(id, x, y, z, hue)
+
+        return None
 
     def flush_cache(self):
         # not implemented in this base class
