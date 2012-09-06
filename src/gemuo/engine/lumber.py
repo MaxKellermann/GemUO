@@ -107,3 +107,7 @@ class Lumber(Engine):
                       0x7a30f, # fail to produce any useable wood
                       ):
             self._cancel_timeout()
+
+    def on_combatant(self, serial):
+        if serial != 0:
+            self.exhausted = True
