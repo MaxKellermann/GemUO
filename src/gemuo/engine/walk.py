@@ -438,11 +438,11 @@ class PathFindWalkNear(Engine):
         destinations = []
 
         for x in range(self.destination.x - self.distance,
-                       self.destination.x + self.distance):
+                       self.destination.x + self.distance + 1):
             for y in range(self.destination.y - self.distance,
-                           self.destination.y + self.distance):
+                           self.destination.y + self.distance + 1):
                 p = Position(x, y)
-                if self.destination.manhattan_distance(p) < self.distance:
+                if self.destination.manhattan_distance(p) <= self.distance:
                     destinations.append(p)
 
         destination = choose_destination(self.map,
