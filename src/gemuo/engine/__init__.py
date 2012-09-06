@@ -21,7 +21,7 @@ class Engine:
 
         self._client = client
         self._client.add_engine(self)
-        self.deferred = Deferred()
+        self.deferred = Deferred(canceller=self.__cancel)
 
     def _disconnect(self):
         if self._client is not None:
@@ -49,3 +49,6 @@ class Engine:
     def abort(self):
         """Aborts this engine, does not emit a signal."""
         self.__stop()
+
+    def __cancel(self, d):
+        self.abort()
