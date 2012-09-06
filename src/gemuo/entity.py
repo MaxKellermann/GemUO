@@ -131,3 +131,6 @@ class Mobile(Entity):
         strength = self.stats[0]
         max_mass = (strength * 7) / 2 + 40
         return max_mass - self.mass
+
+    def is_skill_above(self, skill, value):
+        return self.skills is not None and skill in self.skills and self.skills[skill].value >= value
