@@ -290,6 +290,10 @@ class PathFindWalkFragile(Engine):
         self._failure(Blocked(to))
 
     def on_walk_ack(self):
+        if self.__find is not None:
+            # not our reject, we're still finding the path
+            return
+
         self._cleanup()
         self._next_walk()
 
