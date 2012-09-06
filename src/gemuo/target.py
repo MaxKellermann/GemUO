@@ -80,6 +80,9 @@ class Target:
         if self.graphic != 0: l.append('graphic=0x%x' % self.graphic)
         return '[Target %s]' % ' '.join(l)
 
+    def manhattan_distance(self, other):
+        return abs(self.x - other.x) + abs(self.y - other.y)
+
     def response(self, target_id, flags):
         if self.serial != 0:
             type = 0
