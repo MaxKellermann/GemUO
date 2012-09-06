@@ -13,6 +13,8 @@
 #   GNU General Public License for more details.
 #
 
+from gemuo.target import Target
+
 VECTORS = (
     (0, -1),
     (-1, 0),
@@ -85,7 +87,7 @@ def find_land_resource(map, position, ids, exhaust_db=None, func=None):
                     if item_id not in ids: continue
                     z = block.get_height(x, y)
                     if func is None or func(item_id, spiral.x * 8 + x, spiral.y * 8 + y, z):
-                        return item_id, spiral.x * 8 + x, spiral.y * 8 + y, z
+                        return Target(x=spiral.x * 8 + x, y=spiral.y * 8 + y, z=z)
         spiral.step()
 
 def is_reachable(a, b, distance):
