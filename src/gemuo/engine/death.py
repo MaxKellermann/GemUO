@@ -85,7 +85,7 @@ class AutoResurrect(Engine):
         self.accept = None
 
         if self.walk is not None:
-            self.walk.cancel()
+            self.walk.abort()
             self.walk = None
 
     def _walked(self, *args):
