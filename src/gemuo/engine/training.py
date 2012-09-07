@@ -287,14 +287,17 @@ class SkillTraining(Engine):
             client.send(p.Use(self._world.backpack().serial))
 
         d = deferred_skills(client)
-        d.addCallbacks(self._got_skills, self._failure)
+        d.addCallbacks(self._got_skills, self._failed_skills)
 
-    def abort(self):
-        Engine.abort(self)
+    def __cancel(self):
         if self._use is not None:
             self._use.abort()
         if self.call_id is not None:
             self.call_id.cancel()
+
+    def abort(self):
+        Engine.abort(self)
+        self.__cancel()
 
     def _check_skills(self, skills):
         total = 0
@@ -308,6 +311,7 @@ class SkillTraining(Engine):
             name = SKILL_NAMES[skill_id]
 
             if skill_id not in skills:
+                self.__cancel()
                 self._failure(NoSkills("No value for skill %s" % name))
                 return False
 
@@ -317,22 +321,17 @@ class SkillTraining(Engine):
                 log.msg("Done with skill %s" % name)
                 self._skills.remove(skill_id)
             elif skill.lock != SKILL_LOCK_UP:
+                self.__cancel()
                 self._failure(SkillLocked("Skill is locked: %s" % name))
                 return False
 
         if len(self._skills) == 0:
-            if self._use is not None:
-                self._use.abort()
-            if self.call_id is not None:
-                self.call_id.cancel()
+            self.__cancel()
             self._success()
             return False
 
         if total >= 7000 and down == 0:
-            if self._use is not None:
-                self._use.abort()
-            if self.call_id is not None:
-                self.call_id.cancel()
+            self.__cancel()
             self._failure(SkillLocked("No skills down"))
             return False
 
@@ -371,6 +370,10 @@ class SkillTraining(Engine):
     def _got_skills(self, skills):
         if self._check_skills(skills):
             self._do_next()
+
+    def _failed_skills(self, failure):
+        self.__cancel()
+        self._failure(failure)
 
     def on_skill_update(self, skills):
         self._check_skills(skills)
