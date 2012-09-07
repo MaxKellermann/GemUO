@@ -15,6 +15,7 @@
 
 from twisted.python import log
 from twisted.internet import reactor
+from twisted.internet.defer import CancelledError
 from uo.skills import *
 import uo.packets as p
 import uo.rules
@@ -286,14 +287,16 @@ class SkillTraining(Engine):
         if self._world.backpack() is not None:
             client.send(p.Use(self._world.backpack().serial))
 
-        d = deferred_skills(client)
-        d.addCallbacks(self._got_skills, self._failed_skills)
+        self.__deferred_skills = deferred_skills(client)
+        self.__deferred_skills.addCallbacks(self._got_skills, self._failed_skills)
 
     def __cancel(self):
         if self._use is not None:
             self._use.abort()
         if self.call_id is not None:
             self.call_id.cancel()
+        if self.__deferred_skills is not None:
+            self.__deferred_skills.cancel()
 
     def abort(self):
         Engine.abort(self)
@@ -368,10 +371,15 @@ class SkillTraining(Engine):
         d.addCallbacks(self._used, self._use_failed)
 
     def _got_skills(self, skills):
+        self.__deferred_skills = None
         if self._check_skills(skills):
             self._do_next()
 
     def _failed_skills(self, failure):
+        if failure.check(CancelledError) and self.__deferred_skills is None:
+            return
+
+        self.__deferred_skills = None
         self.__cancel()
         self._failure(failure)
 
