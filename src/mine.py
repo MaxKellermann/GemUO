@@ -342,6 +342,10 @@ class BankRestockGlue(Engine):
         d.addCallbacks(self._walked, self._walk_failed)
 
     def _walk_failed(self, fail):
+        if self._client.is_dead():
+            self._success()
+            return
+
         self.__tries -= 1
         if self.__tries > 0:
             self._walk()

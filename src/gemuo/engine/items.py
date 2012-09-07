@@ -23,6 +23,11 @@ from gemuo.target import Target, SendTarget
 class OpenBank(Engine):
     def __init__(self, client):
         Engine.__init__(self, client)
+
+        if client.is_dead():
+            self._failure(Death())
+            return
+
         self._client.send(p.TalkUnicode(text='Bank!', keyword=0x02))
         self.call_id = reactor.callLater(2, self._timeout)
 
@@ -44,6 +49,10 @@ class OpenContainer(Engine):
 
     def __init__(self, client, container):
         Engine.__init__(self, client)
+
+        if client.is_dead():
+            self._failure(Death())
+            return
 
         self._serial = container.serial
         self._open = False
@@ -122,6 +131,10 @@ class MergeStacks(Engine):
 class UseAndTarget(Engine):
     def __init__(self, client, item, target):
         Engine.__init__(self, client)
+
+        if client.is_dead():
+            self._failure(Death())
+            return
 
         if isinstance(item, Entity):
             item = item.serial
