@@ -81,7 +81,7 @@ class AutoResurrect(Engine):
                                      Position(1281, 1326), 3)
         self.walk.deferred.addCallbacks(self._walked, self._walk_failed)
 
-    def _resurrected(self):
+    def _resurrected(self, *args):
         self.accept = None
 
         if self.walk is not None:
