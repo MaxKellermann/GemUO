@@ -23,7 +23,7 @@ from gemuo.simple import simple_run, simple_later
 from gemuo.data import TileCache
 from gemuo.map import BridgeMap, WorldMap, CacheMap
 from gemuo.entity import Position
-from gemuo.locations import nearest_bank
+from gemuo.locations import nearest_bank, is_rel_por
 from gemuo.exhaust import ExhaustDatabase
 from gemuo.resource import find_statics_resource_block, reachable_resource
 from gemuo.defer import deferred_find_player_item
@@ -41,6 +41,8 @@ from gemuo.engine.death import AutoResurrect
 from gemuo.engine.gm import DetectGameMaster
 from gemuo.engine.relpor import RelPorCaptcha
 from gemuo.engine.training import SkillTraining
+from gemuo.engine.boards_relpor import MakeBoardsRelpor
+
 
 BANK = None
 
@@ -76,6 +78,12 @@ class AutoLumber(Engine):
             # too heavy, finish this engine
             self._success()
             return
+
+        reactor.callLater(0.5, self._make_boards)
+
+    def _make_boards(self):
+        if is_rel_por(self.world):
+            MakeBoardsRelpor(self._client)
 
         reactor.callLater(0.5, self._walk)
 
