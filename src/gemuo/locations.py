@@ -18,13 +18,15 @@ BRITAIN_EAST_BANK = (1646,1598, 1646,1616, 1720,1580)
 MINOC_BANK = (2493,541, 2513,561, 2500,570)
 MOONGLOW_BANK = (4461,1150, 4481,1176, 4442,1200)
 
-# RelPor Banks
-GALVEN_BANK = (1335,1370, 1349,1381, 1281,1395)
-ARBOR_BANK = (1770,1067, 1770,1085, 1751,1077)
-VERMELL_BANK = (1670,1671, 1695,1678, 1670,1684)
+# UO Outlands Banks
+PREVILIA_BANK = (1610,1509, 1620,1509, 1615,1509)
 
 def is_rel_por(world):
-    """Is this the RelPor freeshard?"""
+    """Is this the Rel Por freeshard?"""
+    return world.map_width == 7168 and world.map_height == 4096
+
+def is_uo_outlands(world):
+    """Is this the UO Outlands freeshard?"""
     return world.map_width == 7168 and world.map_height == 4096
 
 def nearest_felucca_bank(world, position):
@@ -40,13 +42,8 @@ def nearest_felucca_bank(world, position):
         return MINOC_BANK
 
 def nearest_bank(world, position):
-    if is_rel_por(world):
-        if position.x < 1500:
-            return GALVEN_BANK
-        elif position.y < 1300:
-            return ARBOR_BANK
-        else:
-            return VERMELL_BANK  
+    if is_uo_outlands(world):
+        return PREVILIA_BANK
     else:
         return nearest_felucca_bank(world, position)
 
