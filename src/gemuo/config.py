@@ -49,5 +49,5 @@ def get_data_path():
 def require_data_path():
     path = get_data_path()
     if path is None:
-        raise 'No data path'
+        raise RuntimeError('No data path')
     return path

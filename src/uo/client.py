@@ -46,12 +46,12 @@ class UOProtocol(Protocol):
         cmd = ord(self._input[0])
         l = packet_lengths[cmd]
         if l == 0xffff:
-            raise "Unsupported packet"
+            raise RuntimeError("Unsupported packet 0x%x" % cmd)
         if l == 0:
             if len(self._input) < 3: return None
             l = struct.unpack('>H', self._input[1:3])[0]
             if l < 3 or l > 0x8000:
-                raise "Malformed packet"
+                raise RuntimeError("Malformed packet")
             if len(self._input) < l: return None
             x, self._input = self._input[3:l], self._input[l:]
         else:
