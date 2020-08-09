@@ -45,6 +45,9 @@ class Resource:
         self.x, self.y, self.z = x, y, z
         self.item_id, self.hue = item_id, hue
 
+    def __str__(self):
+        return "Resource(%d, %d, %d, 0x%x)" % (self.x, self.y, self.z, self.item_id)
+
 def iter_statics_in_block(map, block_x, block_y, ids):
     block = map.statics.load_block(block_x, block_y)
     if block is None:
