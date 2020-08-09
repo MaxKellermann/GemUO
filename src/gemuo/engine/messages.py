@@ -44,3 +44,13 @@ class Parrot(Engine):
                packet.serial != 0xffffffff and \
                len(packet.name) > 0 and packet.text != packet.name and packet.text[0] != '[':
                 self._client.send(p.TalkAscii(type=packet.type, hue=packet.hue, font=packet.font, text=packet.text))
+        elif isinstance(packet, p.UnicodeMessage):
+            if packet.type == 0 and packet.serial != 0 and packet.serial != self._client.world.player.serial and \
+               packet.serial != 0xffffffff and \
+               packet.language != 'Eng' and \
+               packet.text != '(bonded)' and \
+               packet.text != '(tame)' and \
+               packet.text != '(summoned)' and \
+               packet.text[0] != '*' and \
+               len(packet.name) > 0 and packet.text != packet.name and packet.text[0] != '[':
+                self._client.send(p.TalkUnicode(text=packet.text.decode('utf-8'), type=0x09, hue=packet.hue, font=packet.font))
