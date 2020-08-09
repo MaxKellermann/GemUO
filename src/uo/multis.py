@@ -13,6 +13,8 @@
 #   GNU General Public License for more details.
 #
 
+unknown_multis = set()
+
 def standard_multi_passable_at(west, north, width, height, door_x, door_y, num_doors, x, y, z):
     east = west + width - 1
     south = north + height - 1
@@ -70,4 +72,9 @@ def multi_passable_at(item_id, x, y, z):
         # TODO: medium brick? these dimensions are not correct, just a kludge
         return standard_multi_passable_at(-7, -7, 14, 14, -1, 6, 2, x, y, z)
 
-    print "Unknown multi: 0x%x\n" % item_id
+    if item_id not in unknown_multis:
+        unknown_multis.add(item_id)
+        print "Unknown multi: 0x%x" % item_id
+
+    # naive fallback formula
+    return (x < 0 or x > 0) and (y < 0 or y > 0)
