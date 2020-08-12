@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 #
 #  GemUO
 #
@@ -26,7 +26,7 @@ def run(client):
     if gate is None:
         return defer.fail('No nearby gate found')
 
-    print gate
+    print(gate)
     client.send(p.Use(gate.serial))
 
 simple_run(run)

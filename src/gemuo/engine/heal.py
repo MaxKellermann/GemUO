@@ -52,7 +52,7 @@ class AutoHeal(Engine):
             return False
 
         # heal if below 2/3 health
-        return m.hits.value <= (m.hits.limit * 2) / 3
+        return m.hits.value <= (m.hits.limit * 2) // 3
 
     def _next(self):
         client = self._client

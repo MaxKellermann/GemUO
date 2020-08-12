@@ -68,7 +68,7 @@ class Restock(Engine):
         self._destination = container
         self._counts = []
         if isinstance(counts, dict):
-            self._counts.extend(counts.iteritems())
+            self._counts.extend(iter(counts.items()))
         else:
             self._counts.extend(counts)
         self._func = func

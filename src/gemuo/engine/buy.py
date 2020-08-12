@@ -59,10 +59,10 @@ class Buy(Engine):
         self._buy(self.get_item_serial())
 
     def print_offer(self):
-        print "Offer:"
+        print("Offer:")
         for i in self.buy_items:
-            print "ItemID: " + str(i.item_id) + "\t Amount: " + str(i.amount) \
-                + "\t Price: " + str(i.price) + "\t(" + str(i.serial) + ")"  
+            print("ItemID: " + str(i.item_id) + "\t Amount: " + str(i.amount) \
+                + "\t Price: " + str(i.price) + "\t(" + str(i.serial) + ")")
 
     def get_vendor(self, packet):
         if packet.layer:

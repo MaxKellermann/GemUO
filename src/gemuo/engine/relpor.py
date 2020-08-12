@@ -36,9 +36,9 @@ class RelPorCaptcha(Engine):
         if len(tiles) == 0: return
 
         # see which tile id deviates the most
-        avg = total / len(tiles)
-        d = map(lambda value: abs(avg - value), tiles)
-        m = max(zip(d, range(len(d))), key=lambda value: value[0])
+        avg = total // len(tiles)
+        d = [abs(avg - value) for value in tiles]
+        m = max(list(zip(d, list(range(len(d))))), key=lambda value: value[0])
 
         # pick this tile
         response = m[1]

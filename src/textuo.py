@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 #
 #  GemUO
 #
@@ -78,8 +79,8 @@ class GameWindow:
                 window.addch('X')
 
     def draw_static_blocks(self, origin_x, origin_y, width, height):
-        start_y, end_y = origin_y / 8, (origin_y + height + 7) / 8
-        start_x, end_x = origin_x / 8, (origin_x + width + 7) / 8
+        start_y, end_y = origin_y // 8, (origin_y + height + 7) // 8
+        start_x, end_x = origin_x // 8, (origin_x + width + 7) // 8
         block_y = start_y * 8 - origin_y
         for y in range(start_y, end_y):
             block_x = start_x * 8 - origin_x
@@ -122,7 +123,7 @@ class GameWindow:
 
     def draw_entities(self, origin_x, origin_y, width, height):
         window = self.window
-        for e in self.world.entities.itervalues():
+        for e in self.world.entities.values():
             if e.position is None or \
                (e is Item and e.parent_serial is not None):
                 continue
@@ -144,8 +145,8 @@ class GameWindow:
 
         height, width = window.getmaxyx()
         width -= 1
-        origin_x = player.position.x - width / 2
-        origin_y = player.position.y - height / 2
+        origin_x = player.position.x - width // 2
+        origin_y = player.position.y - height // 2
 
         self.draw_land(origin_x, origin_y, width, height)
 

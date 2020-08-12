@@ -62,7 +62,7 @@ def simple_connect(*args, **keywords):
 
 def simple_login():
     if len(argv) != 6:
-        print >>stderr, "Usage: %s host port username password charname"
+        print("Usage: %s host port username password charname", file=stderr)
         exit(1)
 
     host, port, username, password, character = argv[1:]

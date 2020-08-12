@@ -13,7 +13,7 @@
 #   GNU General Public License for more details.
 #
 
-import thread
+import _thread
 import uo.packets as p
 from gemuo.engine import Engine
 from gemuo.player import Walk
@@ -22,7 +22,7 @@ from gemuo.entity import Position, BoundedValue, Entity, Item, Mobile
 class World(Engine):
     def __init__(self, client):
         Engine.__init__(self, client)
-        self.mutex = thread.allocate_lock()
+        self.mutex = _thread.allocate_lock()
         self.entities = dict()
         self.player = None
         self.walk = None
@@ -61,15 +61,15 @@ class World(Engine):
                entity.position is not None and self._reachable(entity.position)
 
     def mobiles(self):
-        return filter(lambda x: isinstance(x, Mobile), self.entities.itervalues())
+        return [x for x in iter(self.entities.values()) if isinstance(x, Mobile)]
 
     def items_in(self, parent):
         if isinstance(parent, Entity):
             parent = parent.serial
-        return filter(lambda x: isinstance(x, Item) and x.parent_serial == parent, self.entities.itervalues())
+        return [x for x in iter(self.entities.values()) if isinstance(x, Item) and x.parent_serial == parent]
 
     def is_empty(self, entity):
-        for x in self.entities.itervalues():
+        for x in self.entities.values():
             if isinstance(x, Item) and x.parent_serial == entity.serial:
                 return False
         return True
@@ -113,14 +113,14 @@ class World(Engine):
 
     def find_reachable_item(self, func):
         if self.player is None: return None
-        for x in self.entities.itervalues():
+        for x in self.entities.values():
             if self._reachable_item(x) and func(x):
                 return x
         return None
 
     def find_reachable_mobile(self, func):
         if self.player is None: return None
-        for x in self.entities.itervalues():
+        for x in self.entities.values():
             if self._reachable_mobile(x) and func(x):
                 return x
         return None
@@ -135,12 +135,12 @@ class World(Engine):
         if self.player is None: return None
 
         items = []
-        for x in self.entities.itervalues():
+        for x in self.entities.values():
             if self._reachable_item(x) and func(x):
                 items.append(x)
         if len(items) == 0: return None
 
-        items.sort(lambda a, b: cmp(self._distance2(a.position), self._distance2(b.position)))
+        items.sort(key=lambda x: self._distance2(x.position))
         return items[0]
 
     def nearest_mobile(self, func):
@@ -149,7 +149,7 @@ class World(Engine):
         min_distance2 = 99999
         min_mobile = None
 
-        for x in self.entities.itervalues():
+        for x in self.entities.values():
             if not isinstance(x, Mobile) or x.serial == self.player.serial: continue
             d2 = self._distance2(x.position)
             if d2 < min_distance2 and func(x):
@@ -159,12 +159,12 @@ class World(Engine):
         return min_mobile
 
     def iter_entities_at(self, x, y):
-        for e in self.entities.itervalues():
+        for e in self.entities.values():
             if e.position is not None and e.position.x == x and e.position.y == y:
                 yield e
 
     def iter_items(self):
-        for e in self.entities.itervalues():
+        for e in self.entities.values():
             if isinstance(e, Item):
                 yield e
 
@@ -174,7 +174,7 @@ class World(Engine):
                 yield i
 
     def iter_mobiles(self):
-        for e in self.entities.itervalues():
+        for e in self.entities.values():
             if isinstance(e, Mobile):
                 yield e
 

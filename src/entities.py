@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 #
 #  GemUO
 #
@@ -28,6 +28,6 @@ def run(client):
 
     world = client.world
     for e in world.iter_entities_at(world.player.position.x, world.player.position.y-1):
-        print e
+        print(e)
 
 simple_run(run)

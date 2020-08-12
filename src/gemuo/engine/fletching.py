@@ -63,12 +63,12 @@ def fletching_choice(skill):
 def TrainFletching(client):
     skills = client.world.player.skills
     if skills is None or SKILL_FLETCHING not in skills:
-        print "No fletching skill"
+        print("No fletching skill")
         return Fail(client)
 
     choice = fletching_choice(skills[SKILL_FLETCHING].value)
     if choice is None:
-        print "No fletching choice"
+        print("No fletching choice")
         return Fail(client)
 
     return Fletching(client, choice)

@@ -129,7 +129,7 @@ class Mobile(Entity):
         Returns None if unknown."""
         if self.mass is None or self.stats is None: return None
         strength = self.stats[0]
-        max_mass = (strength * 7) / 2 + 40
+        max_mass = (strength * 7) // 2 + 40
         return max_mass - self.mass
 
     def is_skill_above(self, skill, value):

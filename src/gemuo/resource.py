@@ -35,7 +35,7 @@ class Spiral:
             self.length += 1
             self.direction = (self.direction + 1) % len(VECTORS)
             self.vector = VECTORS[self.direction]
-            self.remaining = self.length / 2
+            self.remaining = self.length // 2
         self.x += self.vector[0]
         self.y += self.vector[1]
         self.remaining -= 1
@@ -58,7 +58,7 @@ def iter_statics_in_block(map, block_x, block_y, ids):
             yield Resource(block_x * 8 + x, block_y * 8 + y, z, item_id, hue)
 
 def find_statics_resource_block(map, position, ids, exhaust_db=None):
-    spiral = Spiral(position.x / 8, position.y / 8)
+    spiral = Spiral(position.x // 8, position.y // 8)
     while True:
         if exhaust_db is None or not exhaust_db.is_exhausted(spiral.x, spiral.y):
             resources = tuple(iter_statics_in_block(map, spiral.x, spiral.y, ids))
@@ -67,7 +67,7 @@ def find_statics_resource_block(map, position, ids, exhaust_db=None):
         spiral.step()
 
 def find_resource(map, position, ids, exhaust_db=None, func=None):
-    spiral = Spiral(position.x / 8, position.y / 8)
+    spiral = Spiral(position.x // 8, position.y // 8)
     while True:
         if exhaust_db is None or not exhaust_db.is_exhausted(spiral.x, spiral.y):
             block = map.statics.load_block(spiral.x, spiral.y)
@@ -79,7 +79,7 @@ def find_resource(map, position, ids, exhaust_db=None, func=None):
         spiral.step()
 
 def find_land_resource(map, position, ids, exhaust_db=None, func=None):
-    spiral = Spiral(position.x / 8, position.y / 8)
+    spiral = Spiral(position.x // 8, position.y // 8)
     while True:
         if exhaust_db is None or not exhaust_db.is_exhausted(spiral.x, spiral.y):
             block = map.statics.load_block(spiral.x, spiral.y)

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 #
 #  GemUO
 #
@@ -19,7 +19,7 @@ from gemuo.engine.items import OpenBank
 
 def print_contents(container, world):
     for x in world.items_in(container):
-        print x
+        print(x)
 
 def run(client):
     d = OpenBank(client).deferred

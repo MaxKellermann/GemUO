@@ -52,7 +52,7 @@ class StatJojo(Engine):
     def _got_skills(self, skills):
         client = self._client
 
-        total = sum(map(lambda x: x.base, skills.itervalues()))
+        total = sum([x.base for x in iter(skills.values())])
         if total != 7000:
             self._failure(NotAtSkillCap())
             return
@@ -77,7 +77,7 @@ class StatJojo(Engine):
                     selected.append(x)
 
         if not selected:
-            print "No skills selected"
+            print("No skills selected")
             self._failure()
             return
 

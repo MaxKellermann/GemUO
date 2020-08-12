@@ -44,15 +44,15 @@ class DetectGameMaster(Engine):
             self._check_item(item)
 
     def _panic(self, entity):
-        print "\x1b[41m  ____ __  __       _      _            _           _ \x1b[0m"
-        print "\x1b[41m / ___|  \/  |   __| | ___| |_ ___  ___| |_ ___  __| |\x1b[0m"
-        print "\x1b[41m| |  _| |\/| |  / _` |/ _ \ __/ _ \/ __| __/ _ \/ _` |\x1b[0m"
-        print "\x1b[41m| |_| | |  | | | (_| |  __/ ||  __/ (__| ||  __/ (_| |\x1b[0m"
-        print "\x1b[41m \____|_|  |_|  \__,_|\___|\__\___|\___|\__\___|\__,_|\x1b[0m"
+        print("\x1b[41m  ____ __  __       _      _            _           _ \x1b[0m")
+        print("\x1b[41m / ___|  \/  |   __| | ___| |_ ___  ___| |_ ___  __| |\x1b[0m")
+        print("\x1b[41m| |  _| |\/| |  / _` |/ _ \ __/ _ \/ __| __/ _ \/ _` |\x1b[0m")
+        print("\x1b[41m| |_| | |  | | | (_| |  __/ ||  __/ (__| ||  __/ (_| |\x1b[0m")
+        print("\x1b[41m \____|_|  |_|  \__,_|\___|\__\___|\___|\__\___|\__,_|\x1b[0m")
         
         all_entities = self._client.world.entities
         while True:
-            print entity
+            print(entity)
             if not isinstance(entity, Item):
                 break
             parent = entity.parent_serial

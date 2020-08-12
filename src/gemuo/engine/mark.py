@@ -24,5 +24,5 @@ class Mark(Engine):
         if isinstance(packet, p.AsciiMessage):
             if packet.type == 0 and packet.serial == self._client.world.player.serial and \
                    len(packet.name) > 0 and packet.text == 'mark':
-                print "MARK", self._client.world.player.position
+                print("MARK", self._client.world.player.position)
                 self._client.send(p.TalkAscii(type=packet.type, hue=packet.hue, font=packet.font, text=str(self._client.world.player.position)))

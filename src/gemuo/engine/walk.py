@@ -41,7 +41,7 @@ def should_run(mobile):
 
     return mobile.stamina is not None and \
            (mobile.stamina.value >= 20 or \
-            mobile.stamina.value >= mobile.stamina.limit / 2)
+            mobile.stamina.value >= mobile.stamina.limit // 2)
 
 class WalkPoint:
     def __init__(self, x, y):
@@ -147,7 +147,7 @@ class PathWalk(Engine):
                 nearest_distance2 = distance2
 
         if nearest is None:
-            print "done"
+            print("done")
             self._success()
 
         while self.path[0] != nearest:
@@ -158,7 +158,7 @@ class PathWalk(Engine):
             self._next_walk()
             return
 
-        print "Walk to", nearest, nearest_distance2
+        print("Walk to", nearest, nearest_distance2)
         self.__walk = DirectWalk(self._client, nearest).deferred
         self.__walk.addCallbacks(self._walked, self._walk_failed)
 
@@ -168,7 +168,7 @@ class PathWalk(Engine):
         self._next_walk()
 
     def _walk_failed(self, fail):
-        print "Walk failed", fail
+        print("Walk failed", fail)
         self.__walk = None
         reactor.callLater(2, self._next_walk)
 
@@ -289,7 +289,7 @@ class PathFindWalkFragile(Engine):
             to = self._sent[1]
         else:
             to = None
-        print "walk reject", to
+        print("walk reject", to)
 
         self._failure(Blocked(to))
 
@@ -353,20 +353,15 @@ class PathFindWalk(Engine):
         self._try()
 
 def choose_destination(map, player_position, destinations):
-    destinations = filter(lambda p: map.is_passable(p.x, p.y, 0),
-                          destinations)
+    destinations = [p for p in destinations if map.is_passable(p.x, p.y, 0)]
     if len(destinations) == 0:
         return None
 
     destinations = list(destinations)
 
-    def cmp_distance(a, b):
-        return cmp(player_position.manhattan_distance(a),
-                   player_position.manhattan_distance(b))
-
-    destinations.sort(cmp=cmp_distance)
+    destinations.sort(key=lambda x: player_position.manhattan_distance(x))
     if len(destinations) > 8:
-        destinations = destinations[0:len(destinations)/2]
+        destinations = destinations[0:len(destinations)//2]
     return destinations[random.randint(0, len(destinations) - 1)]
 
 class PathFindWalkAny(Engine):

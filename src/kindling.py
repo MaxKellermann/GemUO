@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 from uo.entity import TREES
 import gemuo.config
@@ -15,7 +15,7 @@ from gemuo.engine.walk import PathFindWalk
 
 def find_tree(map, exhaust_db, position):
     item_id, x, y, z = find_resource(map, position, TREES, exhaust_db)
-    print "tree:", item_id, x, y, z
+    print("tree:", item_id, x, y, z)
     return Position(x, y)
 
 class AutoKindling(Engine):

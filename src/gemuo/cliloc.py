@@ -24,7 +24,7 @@ global_cliloc = None
 def load_cliloc_file(path):
     result = dict()
 
-    with file(path) as f:
+    with open(path, 'rb') as f:
         f.read(6)
 
         while True:

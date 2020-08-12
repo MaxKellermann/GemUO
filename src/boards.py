@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 from twisted.internet import reactor, defer
 from uo.entity import *
@@ -28,7 +28,7 @@ def TakeLogs(client, box, amount=180):
 
     logs = world.find_item_in(box, lambda x: x.item_id in ITEMS_LOGS)
     if logs is None:
-        print "No logs in box"
+        print("No logs in box")
         return Fail(client)
 
     drop_into(client, logs, world.backpack(), amount)
@@ -39,7 +39,7 @@ def PutBoards(client, box):
 
     boards = world.find_item_in(world.backpack(), lambda x: x.item_id in ITEMS_BOARDS)
     if boards is None:
-        print "No boards"
+        print("No boards")
         return Fail(client)
 
     drop_into(client, boards, box)
@@ -51,7 +51,7 @@ class MakeBoards(Engine):
 
         tool = client.world.find_item_in(client.world.backpack(), lambda x: x.item_id in ITEMS_CARPENTRY_TOOLS)
         if tool is None:
-            print "No tool"
+            print("No tool")
             self._failure()
             return
 

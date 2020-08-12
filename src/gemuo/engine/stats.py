@@ -16,6 +16,7 @@
 from uo.stats import *
 import uo.packets as p
 from gemuo.engine import Engine
+from functools import reduce
 
 class StatLock(Engine):
     """Automatically sets the stack locks to reach the specified goal.
@@ -37,12 +38,12 @@ class StatLock(Engine):
 
     def _set_lock(self, stat, new_lock):
         if self.player.stat_locks[stat] != new_lock:
-            print "Setting stat lock %s to %s" % (STAT_NAMES[stat], LOCK_NAMES[new_lock])
+            print("Setting stat lock %s to %s" % (STAT_NAMES[stat], LOCK_NAMES[new_lock]))
             self._client.send(p.StatLock(stat, new_lock))
 
     def _check_stats(self):
         if self.player.stats is None or self.player.stat_locks is None:
-            print "no stats available"
+            print("no stats available")
             self.tries -= 1
             if self.tries > 0:
                 self._client.send(p.MobileQuery(0x04, self.player.serial))

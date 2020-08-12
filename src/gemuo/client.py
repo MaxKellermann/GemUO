@@ -53,7 +53,7 @@ class Client:
             else:
                 self.signal('on_packet', packet)
         else:
-            print "No parser for packet:", hex(packet.cmd)
+            print("No parser for packet:", hex(packet.cmd))
 
     def once(self, timeout=1):
         reactor.iterate(timeout)

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 from twisted.internet import reactor
 from uo.entity import *

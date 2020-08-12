@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 from twisted.internet import reactor, defer
 import uo.packets as p
@@ -21,7 +21,7 @@ def find_dagger(world):
     return world.find_player_item(lambda x: x.item_id == ITEM_DAGGER)
 
 def find_sheep(world):
-    return filter(lambda x: x.body == CREATURE_SHEEP, world.iter_mobiles())
+    return [x for x in world.iter_mobiles() if x.body == CREATURE_SHEEP]
 
 def find_reachable_sheep(world):
     return world.find_reachable_mobile(lambda x: x.body == CREATURE_SHEEP)
@@ -48,7 +48,7 @@ class HerdSheep(Engine):
         client = self._client
         self.crook = find_crook(client.world)
         if self.crook is None:
-            print "No crook"
+            print("No crook")
             self._failure()
             return
 
@@ -104,7 +104,7 @@ class HarvestWool(Engine):
 
         dagger = find_dagger(client.world)
         if dagger is None:
-            print "No dagger"
+            print("No dagger")
             self._failure()
             return
 

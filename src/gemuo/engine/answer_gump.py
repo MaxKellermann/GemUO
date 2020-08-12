@@ -28,8 +28,8 @@ class ShowGump(Engine):
         if isinstance(packet, p.DisplayGumpPacked):
             self.gserial = packet.serial
             self.gid = packet.gump_id
-            print self.gserial
-            print self.gid
+            print(self.gserial)
+            print(self.gid)
 
 
 class AnswerGump(Engine):

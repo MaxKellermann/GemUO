@@ -14,14 +14,14 @@
 #
 
 import os
-import ConfigParser
+import configparser
 
 paths = []
 if 'HOME' in os.environ:
     paths.append(os.path.join(os.environ['HOME'], '.gemuo/config'))
 paths.append('/etc/gemuo/config')
 
-config = ConfigParser.ConfigParser()
+config = configparser.ConfigParser()
 config.read(paths)
 
 def require(section, key):
@@ -34,7 +34,7 @@ def get(section, key, default=None):
     it does not exist."""
     try:
         value = require(section, key)
-    except ConfigParser.Error:
+    except configparser.Error:
         value = None
     if value is None:
         value = default

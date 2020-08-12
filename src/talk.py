@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 from twisted.internet.stdio import StandardIO
 from twisted.protocols import basic

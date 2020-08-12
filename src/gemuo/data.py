@@ -23,13 +23,13 @@ FLAG_SURFACE = 0x200
 
 class TileData:
     def __init__(self, path):
-        f = file(path)
+        f = open(path, 'rb')
 
         # detect file format
         f.seek(36)
-        x = f.read(20).rstrip('\0')
+        x = f.read(20).rstrip(b'\0')
         f.seek(0)
-        if x.find('\0') == -1:
+        if x.find(b'\0') == -1:
             # old file format
             read_flags = lambda f: struct.unpack('<I', f.read(4))[0]
             item_count = 0x200
@@ -87,7 +87,7 @@ class LandBlock:
 
 class LandLoader:
     def __init__(self, path, width, height):
-        self.file = file(path)
+        self.file = open(path, 'rb')
         self.width = width
         self.height = height
 
@@ -100,7 +100,7 @@ class LandLoader:
 
 class IndexLoader:
     def __init__(self, path, width, height):
-        self.file = file(path)
+        self.file = open(path, 'rb')
         self.width = width
         self.height = height
 
@@ -143,7 +143,7 @@ class StaticsList:
 
     def _build_passable(self, tile_data):
         # each of the 64 bits tells whether the position is passable
-        passable = 0xffffffffffffffffL
+        passable = 0xffffffffffffffff
         for id, x, y, z, hue in self:
             if not tile_data.item_passable(id):
                 bit = x * 8 + y
@@ -158,7 +158,7 @@ class StaticsList:
 
     def _build_surface(self, tile_data):
         # each of the 64 bits tells whether the position is surface
-        surface = 0L
+        surface = 0
         for id, x, y, z, hue in self:
             if not tile_data.item_surface(id):
                 bit = x * 8 + y
@@ -173,7 +173,7 @@ class StaticsList:
 
 class StaticsLoader:
     def __init__(self, path):
-        self.file = file(path)
+        self.file = open(path, 'rb')
 
     def load_block(self, offset, length):
         self.file.seek(offset)
@@ -197,29 +197,29 @@ class MapGlue:
                                    StaticsLoader(statics_path))
 
     def land_tile_id(self, x, y):
-        block = self.land.load_block(x / 8, y / 8)
+        block = self.land.load_block(x // 8, y // 8)
         return block.get_id(x % 8, y % 8)
 
     def land_tile_flags(self, x, y):
         return self.tile_data.land_flags[self.land_tile_id(x, y)]
 
     def land_tile_height(self, x, y):
-        block = self.land.load_block(x / 8, y / 8)
+        block = self.land.load_block(x // 8, y // 8)
         return block.get_height(x % 8, y % 8)
 
     def statics_at(self, x, y):
-        block = self.statics.load_block(x / 8, y / 8)
+        block = self.statics.load_block(x // 8, y // 8)
         if block is None: return iter(())
         return block.iter_at(x % 8, y %8)
 
     def is_passable(self, x, y, z):
-        statics = self.statics.load_block(x / 8, y / 8)
+        statics = self.statics.load_block(x // 8, y // 8)
         if statics is not None and not statics.is_passable(self.tile_data, x % 8, y % 8, z):
             return False
 
         # even if land is impassable, there may be statics that build
         # a "surface" to walk on
-        block = self.land.load_block(x / 8, y / 8)
+        block = self.land.load_block(x // 8, y // 8)
         if not self.tile_data.land_passable(block.get_id(x % 8, y % 8)) and \
             (statics is None or not statics.is_surface(self.tile_data, x % 8, y % 8)):
             return False

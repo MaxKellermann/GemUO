@@ -173,7 +173,7 @@ ITEMS_INGOT = (0x1Bf2, 0x1bef)
 ITEMS_ANVIL = (0xfaf, 0xfb0)
 ITEMS_FORGE = set((
     0xfb1, # small forge
-)).union(range(0x197a, 0x19aa)) # large forge
+)).union(list(range(0x197a, 0x19aa))) # large forge
 
 ITEMS_LOCKPICK = (0x14fc, 0x14fb)
 

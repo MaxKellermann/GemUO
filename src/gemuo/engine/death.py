@@ -36,7 +36,7 @@ class AcceptResurrect(Engine):
         if isinstance(packet, p.Menu):
             if packet.title == "It is possible for you to be resurrected now. Do you wish to try?":
                 log.msg("Accepting resurrect by player")
-                self._client.send(p.MenuResponse(packet.dialog_serial, 01))
+                self._client.send(p.MenuResponse(packet.dialog_serial, 0o1))
         elif isinstance(packet, p.DisplayGumpPacked) and resurrect_gump_re.search(packet.layout):
             # the NPC healer resurrection gump
             log.msg("Accepting resurrect by NPC healer")

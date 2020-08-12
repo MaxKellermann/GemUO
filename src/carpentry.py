@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 #
 #  GemUO
 #
@@ -44,7 +44,7 @@ class HouseRestock(Engine):
         player = world.player
         self._box = find_restock_box(world)
         if self._box is None:
-            print "No box"
+            print("No box")
             self._failure()
             return
 

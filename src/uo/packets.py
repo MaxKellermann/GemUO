@@ -188,7 +188,7 @@ class SkillUpdate:
 class ContainerContent:
     def __init__(self, packet):
         count = packet.ushort()
-        self.items = map(lambda x: ContainerItem(packet), range(count))
+        self.items = [ContainerItem(packet) for x in range(count)]
 
 class LoginComplete:
     def __init__(self, packet):
@@ -274,7 +274,7 @@ class Menu:
         self.dialog_serial = packet.uint()
         self.menu_serial = packet.ushort()
         self.title = packet.pstring()
-        self.options = map(lambda x: MenuOption(packet), range(packet.byte()))
+        self.options = [MenuOption(packet) for x in range(packet.byte())]
 
 class MovePlayer:
     def __init__(self, packet):
@@ -313,7 +313,7 @@ class ServerList:
     def __init__(self, packet):
         packet.byte()
         count = packet.ushort()
-        self.servers = map(lambda x: Server(packet), range(count))
+        self.servers = [Server(packet) for x in range(count)]
 
 class Character:
     def __init__(self, slot, packet):
@@ -324,7 +324,7 @@ class Character:
 class CharacterList:
     def __init__(self, packet):
         count = packet.byte()
-        self.characters = map(lambda x: Character(x, packet), range(count))
+        self.characters = [Character(x, packet) for x in range(count)]
 
     def find(self, name):
         for character in self.characters:

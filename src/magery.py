@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 from twisted.internet import reactor
 from uo.skills import *
@@ -83,8 +83,8 @@ class NeedMana(Engine):
         else:
             intelligence = 50
 
-        min_mana = (min_percent * intelligence) / 1000
-        max_mana = (max_percent * intelligence) / 1000
+        min_mana = (min_percent * intelligence) // 1000
+        max_mana = (max_percent * intelligence) // 1000
 
         if self.mana < max_mana:
             self.mana = max_mana
@@ -154,7 +154,7 @@ class AutoMagery(Engine):
         skill = magery.value
         spell = select_spell(skill)
         if spell is None:
-            print "No spell"
+            print("No spell")
             self._failure()
             return
 
@@ -168,7 +168,7 @@ class AutoMagery(Engine):
         if self.target:
             target = find_target(client.world)
             if target is None:
-                print "No target"
+                print("No target")
                 self._failure()
                 return
 

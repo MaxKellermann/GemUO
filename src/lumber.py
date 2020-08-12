@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 #
 #  GemUO
 #
@@ -47,8 +47,8 @@ from gemuo.engine.boards_relpor import MakeBoardsRelpor
 BANK = None
 
 def find_tree(map, exhaust_db, position):
-    center = Position((position.x * 7 + BANK[4]) / 8,
-                      (position.y * 7 + BANK[5]) / 8)
+    center = Position((position.x * 7 + BANK[4]) // 8,
+                      (position.y * 7 + BANK[5]) // 8)
     return find_statics_resource_block(map, center, TREES, exhaust_db)
 
 def passable_positions_around(map, x, y, z, distance):
@@ -90,7 +90,7 @@ class AutoLumber(Engine):
     def _equipped(self, result):
         tree = reachable_resource(self.player.position, self.trees, 2)
         if tree is None:
-            print "No tree??"
+            print("No tree??")
             reactor.callLater(0.5, self._walk)
             return
 
@@ -136,7 +136,7 @@ class Bank(Engine):
         self._map = map
         self.tries = 5
 
-        print "Bank"
+        print("Bank")
         self._walk()
 
     def _walk(self):

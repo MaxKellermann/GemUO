@@ -54,8 +54,8 @@ class Watch(Engine):
         if skills is None:
             self.skills = None
         else:
-            skill_list = filter(lambda x: x.base > 0, skills.itervalues())
-            skill_list.sort(lambda a, b: cmp(a.base, b.base), reverse=True)
+            skill_list = [x for x in iter(skills.values()) if x.base > 0]
+            skill_list.sort(key=lambda x: x.base, reverse=True)
 
             total = 0
             down = 0

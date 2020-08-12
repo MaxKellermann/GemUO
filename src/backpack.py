@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 from twisted.internet import defer
 from gemuo.simple import simple_run
@@ -6,7 +6,7 @@ from gemuo.engine.items import OpenContainer
 
 def print_contents(result, world, container):
     for x in world.items_in(container):
-        print x
+        print(x)
 
 def run(client):
     backpack = client.world.backpack()

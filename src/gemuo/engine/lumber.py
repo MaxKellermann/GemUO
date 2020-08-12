@@ -46,7 +46,7 @@ class Lumber(Engine):
         log.msg("Lumber timeout")
         self.timeout_call = None
         self.exhausted = True
-        self.exhaust_db.set_exhausted(self.tree.x / 8, self.tree.y / 8)
+        self.exhaust_db.set_exhausted(self.tree.x // 8, self.tree.y // 8)
 
     def _cancel_timeout(self):
         if self.timeout_call is None: return
@@ -86,7 +86,7 @@ class Lumber(Engine):
                "can't use an axe on that" in text or \
                'Target cannot be seen' in text:
             self.exhausted = True
-            self.exhaust_db.set_exhausted(self.tree.x / 8, self.tree.y / 8)
+            self.exhaust_db.set_exhausted(self.tree.x // 8, self.tree.y // 8)
         elif 'You broke your axe' in text:
             self.exhausted = True
         elif 'put them into your backpack' in text or \
@@ -100,7 +100,7 @@ class Lumber(Engine):
                     0x7a20d, # cannot be seen
                     ):
             self.exhausted = True
-            self.exhaust_db.set_exhausted(self.tree.x / 8, self.tree.y / 8)
+            self.exhaust_db.set_exhausted(self.tree.x // 8, self.tree.y // 8)
         elif text == 0xfee46: # worn out your tool
             self.exhausted = True
         elif text in (0x105d9c, # You chop ... and put them into your backpack

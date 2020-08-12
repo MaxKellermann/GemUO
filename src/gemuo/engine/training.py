@@ -74,20 +74,17 @@ class UseSkill(Engine):
         return self._world.find_player_item(lambda x: x.item_id == ITEM_CROOK)
 
     def _find_mobiles(self):
-        mobiles = list(filter(lambda x: x != self._world.player and x.position is not None,
-                              self._world.mobiles()))
-        mobiles.sort(lambda a, b: cmp(self._distance2(a.position), self._distance2(b.position)))
+        mobiles = list([x for x in self._world.mobiles() if x != self._world.player and x.position is not None])
+        mobiles.sort(key=lambda x: self._distance2(x.position))
         return mobiles
 
     def _find_animals(self):
-        animals = filter(lambda x: x.is_animal() and self._distance2(x.position) <= 64,
-                         self._find_mobiles())
-        animals.sort(lambda a, b: cmp(self._distance2(a.position), self._distance2(b.position)))
+        animals = [x for x in self._find_mobiles() if x.is_animal() and self._distance2(x.position) <= 64]
+        animals.sort(key=lambda x: self._distance2(x.position))
         return animals
 
     def _find_neutral_animals(self):
-        return filter(lambda x: x.notoriety == 3,
-                      self._find_animals())
+        return [x for x in self._find_animals() if x.notoriety == 3]
 
     def _find_skill_targets(self, skill):
         targets = []
@@ -305,7 +302,7 @@ class SkillTraining(Engine):
     def _check_skills(self, skills):
         total = 0
         down = 0
-        for skill in skills.itervalues():
+        for skill in skills.values():
             total += skill.base
             if skill.lock == SKILL_LOCK_DOWN:
                 down += skill.base

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 from gemuo.simple import simple_run
 from gemuo.engine.messages import PrintMessages

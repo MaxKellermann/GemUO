@@ -74,7 +74,7 @@ def multi_passable_at(item_id, x, y, z):
 
     if item_id not in unknown_multis:
         unknown_multis.add(item_id)
-        print "Unknown multi: 0x%x" % item_id
+        print("Unknown multi: 0x%x" % item_id)
 
     # naive fallback formula
     return (x < 0 or x > 0) and (y < 0 or y > 0)

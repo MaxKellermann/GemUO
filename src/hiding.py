@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 from uo.skills import *
 from gemuo.simple import simple_run

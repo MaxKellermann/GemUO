@@ -45,7 +45,7 @@ class Carpentry(Engine):
     def _got_skill(self, carpentry):
         self.target = carpentry_target(carpentry.value)
         if self.target is None:
-            print "No carpentry target"
+            print("No carpentry target")
             self._failure()
             return
 

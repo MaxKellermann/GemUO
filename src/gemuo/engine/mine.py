@@ -40,7 +40,7 @@ class Mine(Engine):
         log.msg("Mining timeout")
         self.timeout_call = None
         self.exhausted = True
-        self.exhaust_db.set_exhausted(self.mountain.x / 8, self.mountain.y / 8)
+        self.exhaust_db.set_exhausted(self.mountain.x // 8, self.mountain.y // 8)
 
     def _cancel_timeout(self):
         if self.timeout_call is None: return
@@ -82,7 +82,7 @@ class Mine(Engine):
         if 'no metal here' in text or \
                'Target cannot be seen' in text:
             self.exhausted = True
-            self.exhaust_db.set_exhausted(self.mountain.x / 8, self.mountain.y / 8)
+            self.exhaust_db.set_exhausted(self.mountain.x // 8, self.mountain.y // 8)
         elif 'worn out your tool' in text:
             self.exhausted = True
         elif 'put it into your backpack' in text or \
@@ -102,7 +102,7 @@ class Mine(Engine):
                     0x7a20d, # cannot be seen
                     ):
             self.exhausted = True
-            self.exhaust_db.set_exhausted(self.mountain.x / 8, self.mountain.y / 8)
+            self.exhaust_db.set_exhausted(self.mountain.x // 8, self.mountain.y // 8)
         elif text == 0xfee46: # worn out your tool
             self.exhausted = True
         elif text in (0xf5de0, 0xf5de1, 0xf5de2, 0xf5de3, 0xf5de4, 0xf5de5, 0xf5de6, 0xf5de7, # put it in your backpack
@@ -137,7 +137,7 @@ class MergeOre(Engine):
             self._failure(self.__failed)
             return
 
-        ores = find_two_same_hue(filter(is_ore, self._client.world.items_in(self.container)))
+        ores = find_two_same_hue(list(filter(is_ore, self._client.world.items_in(self.container))))
         if ores is None:
             self._success()
             return

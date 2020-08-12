@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 #
 #  GemUO
 #
@@ -59,8 +59,8 @@ def find_mountain(map, exhaust_db, position):
     def check_mountain(item_id, x, y, z):
         return len(passable_positions_around(map, x, y, z, 2)) > 0
 
-    #center = Position((position.x * 3 + CENTER[0]) / 4,
-    #                  (position.y * 3 + CENTER[1]) / 4)
+    #center = Position((position.x * 3 + CENTER[0]) // 4,
+    #                  (position.y * 3 + CENTER[1]) // 4)
     center = position
     return find_land_resource(map, position, MOUNTAIN, exhaust_db, check_mountain)
 
@@ -134,7 +134,7 @@ def group_by_hue(items):
     return result
 
 def find_two_same_hue(items):
-    for i in group_by_hue(items).itervalues():
+    for i in group_by_hue(items).values():
         if len(i) >= 2:
             return i
     return None
@@ -176,7 +176,7 @@ class Melt(Engine):
 
     def _walk(self):
         forge = nearest_forge(self._client.world, self._client.world.player.position)
-        print "forge", forge
+        print("forge", forge)
         self._map.flush_cache()
         p = Position(forge[0], forge[1])
         d = PathFindWalkNear(self._client, self._map, p, 1).deferred
@@ -190,7 +190,7 @@ class Melt(Engine):
             self._failure(fail)
 
     def _walked(self, *args):
-        print "resync"
+        print("resync")
         self._client.send(p.Resync())
 
         #backpack = client.world.backpack()
@@ -333,7 +333,7 @@ class BankRestockGlue(Engine):
         self._map = map
         self.__tries = 5
 
-        print "Bank"
+        print("Bank")
         self._walk()
 
     def _walk(self):
@@ -405,7 +405,7 @@ class AutoHarvest(Engine):
         d.addCallbacks(self._ingots_counted, self._failure)
 
     def _melt_failed(self, fail):
-        print "melt failed:", fail
+        print("melt failed:", fail)
         self._client.send(p.Resync())
         reactor.callLater(2, self._melt)
 

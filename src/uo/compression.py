@@ -280,14 +280,14 @@ class Decompress:
         self._value = 0
 
     def decompress(self, src):
-        dest = ''
+        dest = bytearray()
 
         while True:
             if self._bit >= 8:
                 if len(src) == 0:
                     return dest
 
-                self._value = ord(src[0])
+                self._value = src[0]
                 src = src[1:]
 
                 self._bit = 0
@@ -309,5 +309,5 @@ class Decompress:
                     self._treepos = 0 # start on tree top again
                     continue
 
-                dest += chr(-self._treepos)
+                dest.append(-self._treepos)
                 self._treepos = 0

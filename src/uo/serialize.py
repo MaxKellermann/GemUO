@@ -16,7 +16,7 @@
 import string, struct
 
 def decode_ustring(x):
-    return x.decode('utf-16be')
+    return x.decode('utf-16be', errors='replace')
 
 def decode_ustring_list(x):
     result = []
@@ -94,12 +94,12 @@ class PacketReader:
         return self.byte() != 0
 
     def fixstring(self, length):
-        return self.data(length).replace('\0', '')
+        return self.data(length).replace(b'\0', b'').decode('utf-8', errors='replace')
 
     def cstring(self):
-        i = self._data.index('\0')
+        i = self._data.index(b'\0')
         x, self._data = self._data[:i], self._data[i+1:]
-        return x
+        return x.decode('utf-8', errors='replace')
 
     def pstring(self):
         return self.fixstring(self.byte())
@@ -110,15 +110,15 @@ class PacketReader:
             i = self.ushort()
             if i == 0:
                 break
-            x += unichr(i)
+            x += chr(i)
         return x
 
     def ipv4(self):
-        return string.join(map(str, struct.unpack('4B', self.data(4))), '.')
+        return '.'.join(map(str, struct.unpack('4B', self.data(4))))
 
 class PacketWriter:
     def __init__(self, cmd):
-        self._data = ''
+        self._data = bytearray()
         self.byte(cmd)
         self._length = packet_lengths[cmd]
         if self._length == 0xffff:
@@ -153,17 +153,18 @@ class PacketWriter:
             self.byte(0)
 
     def fixstring(self, x, length):
+        x = x.encode('utf-8', errors='replace')
         if len(x) > length:
             raise RuntimeError("String is too long")
         self.data(x)
-        self.data('\0' * (length - len(x)))
+        self.data(b'\0' * (length - len(x)))
 
     def cstring(self, x):
-        self.data(x)
+        self.data(x.encode('utf-8', errors='replace'))
         self.byte(0)
 
     def ucstring(self, x):
-        self.data(x.encode('utf-16be'))
+        self.data(x.encode('utf-16be', errors='replace'))
         self.ushort(0)
 
     def finish(self):
@@ -171,9 +172,9 @@ class PacketWriter:
         if self._length == 0:
             if len(data) > 0xf000:
                 raise RuntimeError("Packet too large")
-            data = data[0] + struct.pack('>H', len(data) + 2) + data[1:]
+            data[1:1] = struct.pack('>H', len(data) + 2)
         else:
             if len(data) != self._length:
-                print self._length, repr(data)
+                print(self._length, repr(data))
                 raise RuntimeError("Invalid packet length")
         return data

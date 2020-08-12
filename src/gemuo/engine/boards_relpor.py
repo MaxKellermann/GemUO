@@ -40,7 +40,7 @@ class MakeBoardsRelpor(Engine):
 
     def _found_axe(self, axe):
         if axe is None:
-            print "No axe"
+            print("No axe")
             self.failure()
             return
               
@@ -55,7 +55,7 @@ class MakeBoardsRelpor(Engine):
 
     def _found_logs(self, logs):
         if logs is None:
-            print "No logs"
+            print("No logs")
             self.failure()
             return
 

@@ -28,10 +28,10 @@ def iter_statics_in_block(map, block_x, block_y, ids):
             yield Resource(block_x * 8 + x, block_y * 8 + y, z, item_id, hue)
 
 def iter_static_near(map, x, y, max_distance, ids):
-    block_min_x = (x - max_distance) / 8
-    block_max_x = (x + max_distance) / 8
-    block_min_y = (y - max_distance) / 8
-    block_max_y = (y + max_distance) / 8
+    block_min_x = (x - max_distance) // 8
+    block_max_x = (x + max_distance) // 8
+    block_min_y = (y - max_distance) // 8
+    block_max_y = (y + max_distance) // 8
 
     for block_x in range(block_min_x, block_max_x + 1):
         for block_y in range(block_min_y, block_max_y + 1):

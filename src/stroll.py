@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 import gemuo.config
 from gemuo.simple import simple_run

@@ -29,7 +29,7 @@ class UOProtocol(Protocol):
         self.transport.setTcpNoDelay(False)
 
         self.transport.write(struct.pack('>I', self.__seed))
-        self._input = ''
+        self._input = b''
 
         self._decompress = None
         if self.__decompress:
@@ -37,13 +37,13 @@ class UOProtocol(Protocol):
 
     def connectionLost(self, reason):
         Protocol.connectionLost(self, reason)
-        print "connectionLost", repr(reason)
+        print(("connectionLost", repr(reason)))
 
     def _packet_from_buffer(self):
-        if self._input == '':
+        if not self._input:
             return None
 
-        cmd = ord(self._input[0])
+        cmd = self._input[0]
         l = packet_lengths[cmd]
         if l == 0xffff:
             raise RuntimeError("Unsupported packet 0x%x" % cmd)

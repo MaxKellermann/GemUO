@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 #
 #  GemUO
 #
@@ -71,7 +71,7 @@ class Merge(Engine):
             if b is not None:
                 break
 
-        print "merge", a, b
+        print("merge", a, b)
 
         client.send(p.LiftRequest(a.serial))
         client.send(p.Drop(a.serial, 0, 0, 0, b.serial))
