@@ -15,12 +15,6 @@
 
 import string, struct
 
-def decode_uchar(value):
-    if value < 0x100:
-        return chr(value)
-    else:
-        return '?'
-
 def decode_ustring(x):
     return x.decode('utf-16be')
 
@@ -116,7 +110,7 @@ class PacketReader:
             i = self.ushort()
             if i == 0:
                 break
-            x += decode_uchar(i)
+            x += unichr(i)
         return x
 
     def ipv4(self):
