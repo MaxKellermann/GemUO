@@ -22,12 +22,7 @@ def decode_uchar(value):
         return '?'
 
 def decode_ustring(x):
-    result = u''
-    i = 0
-    while i < len(x):
-        result += decode_uchar(struct.unpack('>H', x[i:i+2])[0])
-        i += 2
-    return result
+    return x.decode('utf-16be')
 
 def decode_ustring_list(x):
     result = []
@@ -174,8 +169,7 @@ class PacketWriter:
         self.byte(0)
 
     def ucstring(self, x):
-        for ch in x:
-            self.ushort(ord(ch))
+        self.data(x.encode('utf-16be'))
         self.ushort(0)
 
     def finish(self):
