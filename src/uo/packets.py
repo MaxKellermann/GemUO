@@ -676,15 +676,23 @@ def PlayServer(index):
     p.ushort(index)
     return p.finish()
 
-def TalkUnicode(text, keyword, type=0xc0, hue=0x34, font=1):
+def TalkUnicode(text, keyword=None, type=0, hue=0x34, font=1):
+    assert (type & 0xc0) == 0
+
+    if keyword is not None:
+        type |= 0xc0
+
     p = PacketWriter(0xad)
     p.byte(type)
     p.ushort(hue)
     p.ushort(font)
     p.fixstring('Eng', 4)
-    p.byte(0x00)
-    p.byte(0x10)
-    p.byte(keyword)
+
+    if keyword is not None:
+        p.byte(0x00)
+        p.byte(0x10 | (keyword >> 8))
+        p.byte(keyword)
+
     p.cstring(text)
     return p.finish()
 
