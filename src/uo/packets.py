@@ -693,7 +693,7 @@ def TalkUnicode(text, keyword=None, type=0, hue=0x34, font=1):
         p.byte(0x10 | (keyword >> 8))
         p.byte(keyword)
 
-    p.cstring(text)
+    p.ucstring(text)
     return p.finish()
 
 def GumpResponse(serial, gump_id, button_id=1, switches=[]):
