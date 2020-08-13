@@ -53,4 +53,4 @@ class Parrot(Engine):
                packet.text != '(summoned)' and \
                packet.text[0] != '*' and \
                len(packet.name) > 0 and packet.text != packet.name and packet.text[0] != '[':
-                self._client.send(p.TalkUnicode(text=packet.text.decode('utf-8'), type=0x09, hue=packet.hue, font=packet.font))
+                self._client.send(p.TalkUnicode(text=packet.text, type=0x09, hue=packet.hue, font=packet.font))
