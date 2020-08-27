@@ -16,11 +16,7 @@ Getting GemUO
 As of now, there are no releases.  GemUO is work in progress, and the
 source must be downloaded from the git repository::
 
- git clone git://git.berlios.de/gemuo
-
-This is the project's home page:
-
- http://max.kellermann.name/projects/gemuo/
+ git clone https://github.com/MaxKellermann/GemUO
 
 
 Installation
