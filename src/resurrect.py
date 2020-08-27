@@ -2,7 +2,7 @@
 #
 #  GemUO
 #
-#  (c) 2005-2010 Max Kellermann <max@duempel.org>
+#  Copyright 2005-2020 Max Kellermann <max.kellermann@gmail.com>
 #                Kai Sassmannshausen <kai@sassie.org>
 #
 #   This program is free software; you can redistribute it and/or modify
