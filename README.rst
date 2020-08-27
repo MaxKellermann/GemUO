@@ -17,7 +17,7 @@ Getting GemUO
 -------------
 
 As of now, there are no releases.  GemUO is work in progress, and the
-source must be downloaded from the git repository:
+source must be downloaded from the git repository::
 
  git clone git://git.berlios.de/gemuo
 
@@ -36,7 +36,7 @@ too.  You need Python 2.5 to run it.
 Running
 -------
 
-Type
+Type::
 
  python src/hiding.py the.server.com 2593 username password CharName
 
