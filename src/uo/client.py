@@ -40,7 +40,7 @@ class UOProtocol(Protocol):
     def connectionLost(self, reason):
         Protocol.connectionLost(self, reason)
         if not reason.check(ConnectionDone):
-            print(("connectionLost", repr(reason)))
+            print("connectionLost", repr(reason))
 
     def _packet_from_buffer(self):
         if not self._input:
