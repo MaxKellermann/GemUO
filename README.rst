@@ -30,7 +30,7 @@ Installation
 ------------
 
 GemUO is being developed on Linux, but it probably runs on Windows,
-too.  You need Python 2.5 to run it.
+too.  You need Python 3.7 to run it.
 
 
 Running
