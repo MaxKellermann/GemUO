@@ -14,6 +14,7 @@
 #
 
 import string, struct
+from uo.error import ProtocolError
 
 def decode_ustring(x):
     return x.decode('utf-16be', errors='replace')
@@ -74,7 +75,7 @@ class PacketReader:
 
     def data(self, length):
         if len(self._data) < length:
-            raise RuntimeError("Packet is too short")
+            raise ProtocolError("Packet is too short")
         x, self._data = self._data[:length], self._data[length:]
         return x
 
@@ -122,7 +123,7 @@ class PacketWriter:
         self.byte(cmd)
         self._length = packet_lengths[cmd]
         if self._length == 0xffff:
-            raise RuntimeError("Unsupported packet")
+            raise ProtocolError("Unsupported packet")
 
     def data(self, x):
         self._data += x
@@ -155,7 +156,7 @@ class PacketWriter:
     def fixstring(self, x, length):
         x = x.encode('utf-8', errors='replace')
         if len(x) > length:
-            raise RuntimeError("String is too long")
+            raise ProtocolError("String is too long")
         self.data(x)
         self.data(b'\0' * (length - len(x)))
 
@@ -171,10 +172,10 @@ class PacketWriter:
         data = self._data
         if self._length == 0:
             if len(data) > 0xf000:
-                raise RuntimeError("Packet too large")
+                raise ProtocolError("Packet too large")
             data[1:1] = struct.pack('>H', len(data) + 2)
         else:
             if len(data) != self._length:
                 print(self._length, repr(data))
-                raise RuntimeError("Invalid packet length")
+                raise ProtocolError("Invalid packet length")
         return data

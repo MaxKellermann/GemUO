@@ -15,6 +15,7 @@
 
 import struct
 from twisted.internet.protocol import Protocol
+from uo.error import ProtocolError
 from uo.serialize import packet_lengths, PacketReader
 from uo.compression import Decompress
 
@@ -46,12 +47,12 @@ class UOProtocol(Protocol):
         cmd = self._input[0]
         l = packet_lengths[cmd]
         if l == 0xffff:
-            raise RuntimeError("Unsupported packet 0x%x" % cmd)
+            raise ProtocolError("Unsupported packet 0x%x" % cmd)
         if l == 0:
             if len(self._input) < 3: return None
             l = struct.unpack('>H', self._input[1:3])[0]
             if l < 3 or l > 0x8000:
-                raise RuntimeError("Malformed packet")
+                raise ProtocolError("Malformed packet")
             if len(self._input) < l: return None
             x, self._input = self._input[3:l], self._input[l:]
         else:
