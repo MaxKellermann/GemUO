@@ -47,8 +47,8 @@ Type::
 This connects to the specified shard, and trains the Hiding skill.
 There are other example macros.
 
-It is recommended to run GemUO with uoproxy
-(http://max.kellermann.name/projects/uoproxy/) so you can watch the
+It is recommended to run GemUO with `uoproxy
+<https://github.com/MaxKellermann/uoproxy/>`__ so you can watch the
 scripts while they run.
 
 
