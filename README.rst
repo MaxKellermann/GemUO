@@ -10,20 +10,23 @@ be possible to write complex bots for training skills, harvesting
 resources or even fighting.
 
 
-Getting GemUO
--------------
-
-As of now, there are no releases.  GemUO is work in progress, and the
-source must be downloaded from the git repository::
-
- git clone https://github.com/MaxKellermann/GemUO
-
-
 Installation
 ------------
 
 GemUO is being developed on Linux, but it probably runs on Windows,
-too.  You need Python 3.7 to run it.
+too.  You need:
+
+- Python 3.7 or newer
+- `Twisted <https://twistedmatrix.com/trac/>`__
+
+On Debian/Ubuntu and similar Linux distributions, the following
+command will install all required packages::
+
+ sudo apt-get install python3 python3-twisted
+
+To install GemUO, clone the git repository::
+
+ git clone https://github.com/MaxKellermann/GemUO
 
 
 Running
