@@ -148,7 +148,7 @@ class AccountLogin(Engine):
                 self._client.send(p.PlayCharacter(character.slot))
                 self._client.send(p.ClientVersion('5.0.8.3'))
             else:
-                self._failure("No such character")
+                self._failure(RuntimeError("No such character"))
         elif isinstance(packet, p.LoginComplete):
             self._success(self._client)
 
