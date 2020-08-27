@@ -1,8 +1,5 @@
-GemUO README
-============
-
-Copyright 2005-2020 Max Kellermann <max.kellermann@gmail.com>
-
+GemUO
+=====
 
 What is GemUO?
 --------------
@@ -65,7 +62,7 @@ requests to GitHub: https://github.com/MaxKellermann/GemUO
 Legal
 -----
 
-Copyright 2005-2010 Max Kellermann <max@duempel.org>
+Copyright 2005-2020 Max Kellermann <max.kellermann@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
