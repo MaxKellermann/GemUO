@@ -19,7 +19,7 @@ def status(result, client):
     if player.mana is not None:
         print("Mana:", "\t", player.mana.value, "/", player.mana.limit)
     if player.stamina is not None:
-        prin(("Stam:", "\t", player.stamina.value, "/", player.stamina.limit)
+        print("Stam:", "\t", player.stamina.value, "/", player.stamina.limit)
 
     print("Skills:")
     skills = [x for x in iter(list(player.skills.values())) if x.base > 0]
