@@ -58,7 +58,8 @@ This project is aimed at hackers who can read the source.
 Contributing
 ------------
 
-Contributions to GemUO are welcome.  Send patches to max@duempel.org
+Contributions to GemUO are welcome.  Send bug reports and pull
+requests to GitHub: https://github.com/MaxKellermann/GemUO
 
 
 Legal
