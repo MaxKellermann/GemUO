@@ -28,6 +28,14 @@ To install GemUO, clone the git repository::
 
  git clone https://github.com/MaxKellermann/GemUO
 
+Some features (e.g. path finding) require the original UO client (or
+rather: its map files, i.e. ``map0.mul`` etc.).  To tell GemUO where
+to find them, create the file ``~/.gemuo/config`` or
+``/etc/gemuo/config`` and type::
+
+ [uo]
+ path = /opt/uo
+
 
 Running
 -------
