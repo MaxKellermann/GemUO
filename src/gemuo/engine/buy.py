@@ -17,7 +17,7 @@
 import uo.packets as p
 from gemuo.engine import Engine
 from twisted.internet import reactor
-from gemuo.error import Timeout
+from gemuo.error import Timeout, NoSuchEntity
 
 class Buy(Engine):
 
@@ -47,7 +47,7 @@ class Buy(Engine):
         if serial is not None:
             self._client.send(p.VendorBuyReply(self.vendor, serial, self.amount))
         else:
-            self._failure('No serial')
+            self._failure(NoSuchEntity('No serial'))
 
     def update_buy_list(self, buy_list):
         for bi in self.buy_items:
@@ -113,10 +113,10 @@ class Buy_at_price(Buy):
             if self.get_item_price() <= self.price:
                 self._client.send(p.VendorBuyReply(self.vendor, serial, self.amount))
             else:
-                self._failure("Item is to expensive here: "  + str(self.get_item_price()) + \
-                                  "/" + str(self.price))
+                self._failure(RuntimeError("Item is too expensive here: "  + str(self.get_item_price()) + \
+                                           "/" + str(self.price)))
         else:
-            self._failure("No serial")
+            self._failure(NoSuchEntity("No serial"))
 
 class BuyItem():
     

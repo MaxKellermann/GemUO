@@ -17,6 +17,7 @@ import os
 from twisted.internet import reactor, defer
 from twisted.internet.protocol import ClientCreator
 from uo.client import UOProtocol
+from uo.error import ProtocolError
 import uo.packets as p
 from gemuo.engine import Engine
 
@@ -101,16 +102,16 @@ class GameLogin(Engine):
 
     def on_packet(self, packet):
         if isinstance(packet, p.ServerList):
-            self._failure("Refusing to use second server list")
+            self._failure(ProtocolError("Refusing to use second server list"))
         elif isinstance(packet, p.Relay):
-            self._failure("Refusing to follow second relay")
+            self._failure(ProtocolError("Refusing to follow second relay"))
         elif isinstance(packet, p.CharacterList):
             character = packet.find(self.character)
             if character:
                 self._client.send(p.PlayCharacter(character.slot))
                 self._client.send(p.ClientVersion('5.0.8.3'))
             else:
-                self._failure("No such character")
+                self._failure(RuntimeError("No such character"))
         elif isinstance(packet, p.LoginComplete):
             self._success(self._client)
 

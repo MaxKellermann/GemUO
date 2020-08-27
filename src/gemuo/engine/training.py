@@ -222,7 +222,7 @@ class UseSkill(Engine):
         if text == 'What instrument shall you play?':
             instrument = self._find_instrument()
             if instrument is None:
-                self._failure('No instrument')
+                self._failure(NoSuchEntity'No instrument'))
                 return
 
             self._targets = [instrument] + self._targets
