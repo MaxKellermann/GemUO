@@ -25,7 +25,7 @@ class Engine:
 
     def _disconnect(self):
         if self._client is not None:
-            self._client._client.transport.abortConnection()
+            self._client._client.transport.loseConnection()
             self._client = None
 
     def _signal(self, name, *args, **keywords):

@@ -15,6 +15,7 @@
 
 import struct
 from twisted.internet.protocol import Protocol
+from twisted.internet.error import ConnectionDone
 from uo.error import ProtocolError
 from uo.serialize import packet_lengths, PacketReader
 from uo.compression import Decompress
@@ -38,7 +39,8 @@ class UOProtocol(Protocol):
 
     def connectionLost(self, reason):
         Protocol.connectionLost(self, reason)
-        print(("connectionLost", repr(reason)))
+        if not reason.check(ConnectionDone):
+            print(("connectionLost", repr(reason)))
 
     def _packet_from_buffer(self):
         if not self._input:
